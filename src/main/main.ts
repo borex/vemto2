@@ -1,19 +1,26 @@
+/// <reference path="./base.d.ts" />
+
 import { join } from "path"
 import { IpcMessagesHandler } from "./IpcMessagesHandler"
 import { app, BrowserWindow, session } from "electron"
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer"
+import { setupTitlebar, attachTitlebarToWindow } from "custom-electron-titlebar/main"
 
 const isTesting = process.env.NODE_ENV === "test",
     isDevelopment = process.env.NODE_ENV === "development"
+
+setupTitlebar()
 
 function createWindow() {
     const mainWindow = new BrowserWindow({
         width: 1320,
         height: 768,
+        titleBarStyle: 'hidden',
         webPreferences: {
             preload: join(__dirname, "preload.js"),
             nodeIntegration: false,
             contextIsolation: true,
+            sandbox: false,
         },
     })
 
@@ -27,6 +34,8 @@ function createWindow() {
         mainWindow.setMenu(null)
         mainWindow.loadFile(join(app.getAppPath(), "renderer", "index.html"))
     }
+
+    attachTitlebarToWindow(mainWindow)
 }
 
 app.whenReady().then(() => {
