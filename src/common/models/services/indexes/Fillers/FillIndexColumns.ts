@@ -16,6 +16,8 @@ export default new class FillIndexColumns {
     }
 
     fill() {
+        if(!this.index.columns || !this.index.columns.length) return
+
         this.index.columns.forEach((columnName: string) => {
             const column: Column = this.index.table.findColumnByName(columnName)
 
