@@ -22,7 +22,7 @@ test('It can get the migration name', () => {
 
     GenerateNewMigration.setTable(table)
 
-    expect(GenerateNewMigration.getName()).toBe('/database/migrations/2022_01_01_000000_update_posts_table.php')
+    expect(GenerateNewMigration.getName()).toBe('/database/migrations/2022_01_01_000000_create_posts_table.php')
 })
 
 test('It can add the migration to the generation queue and remove the table from changed tables', async () => {
@@ -145,18 +145,26 @@ test('It can generate a migration to add a multiple columns index', async () => 
 })
 
 test('It can generate a migration to add a foreign index', async () => {
-    const table = TestHelper.createTable({ name: 'posts' }),
+    const usersTable = TestHelper.createTableWithPrimaryKey(),
+        postsTable = TestHelper.createTable({ name: 'posts' }),
+        column = TestHelper.createColumn({ name: 'user_id', type: 'unsignedBigInteger', table: postsTable }),
         index = new Index
 
         index.name = 'new_index'
-        index.tableId = table.id
-        index.columns = ['user_id']
+        index.tableId = postsTable.id
+        index.columns = [column.name]
         index.type = 'foreign'
-        index.references = 'users'
-        index.on = 'id'
-        index.saveFromInterface()
 
-    GenerateNewMigration.setTable(table)
+        index.references = 'id'
+        index.referencesColumnId = usersTable.columns[0].id
+
+        index.on = 'users'
+        index.onTableId = usersTable.id
+
+        index.saveFromInterface()
+        index.relation('indexColumns').attachUnique(column)
+
+    GenerateNewMigration.setTable(postsTable)
 
     const renderedTemplateContent = await GenerateNewMigration.generateUpdaterMigration(),
         renderedTemplateFile = TestHelper.readOrCreateFile(path.join(__dirname, 'tests/output/new-migration-adding-foreign-index.php'), renderedTemplateContent)
@@ -183,19 +191,34 @@ test('It can generate a migration to remove an index', async () => {
 })
 
 test('It can generate a migration to create a new table', async () => {
-    const table = TestHelper.createTable({ name: 'posts', needsMigration: true })
+    const usersTable = TestHelper.createTableWithPrimaryKey(),
+        postsTable = TestHelper.createTableWithPrimaryKey({ name: 'posts', needsMigration: true })
 
     // add primary
-    TestHelper.createColumn({ name: 'id', type: 'unsignedBigInteger', order: 0, table, autoIncrement: true })
-    TestHelper.createColumn({ name: 'title', order: 1, table })
-    TestHelper.createColumn({ name: 'content', order: 2, table })
-    TestHelper.createColumn({ name: 'token', order: 3, table })
-    TestHelper.createColumn({ name: 'user_id', order: 4, table })
+    TestHelper.createColumn({ name: 'title', order: 1, table: postsTable })
+    TestHelper.createColumn({ name: 'content', order: 2, table: postsTable })
 
-    TestHelper.createIndex({ name: 'new_index', columns: ['token'], table })
-    TestHelper.createForeignIndex({ name: 'new_foreign_index', columns: ['user_id'], references: 'users', on: 'id', table })
+    TestHelper.createColumn({ name: 'token', order: 3, table: postsTable })
+    TestHelper.createIndex({ name: 'new_index', columns: ['token'], table: postsTable })
 
-    GenerateNewMigration.setTable(table)
+    const column = TestHelper.createColumn({ name: 'user_id', order: 4, table: postsTable }),
+        index = new Index
+
+    index.name = 'new_index'
+    index.tableId = postsTable.id
+    index.columns = [column.name]
+    index.type = 'foreign'
+
+    index.references = 'id'
+    index.referencesColumnId = usersTable.columns[0].id
+
+    index.on = 'users'
+    index.onTableId = usersTable.id
+
+    index.save()
+    index.relation('indexColumns').attachUnique(column)
+
+    GenerateNewMigration.setTable(postsTable)
 
     const renderedTemplateContent = await GenerateNewMigration.getContent(),
         renderedTemplateFile = TestHelper.readOrCreateFile(path.join(__dirname, 'tests/output/new-migration-creating-table.php'), renderedTemplateContent)

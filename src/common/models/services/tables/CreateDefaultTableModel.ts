@@ -12,6 +12,14 @@ export default new class CreateDefaultTableModel {
     }
 
     create(): Model {
+        const model: Model = this.process()
+
+        model.saveFromInterface()
+
+        return model
+    }
+
+    process(): Model {
         const model = new Model({
             tableId: this.table.id,
             projectId: this.table.project.id,
@@ -29,7 +37,6 @@ export default new class CreateDefaultTableModel {
         model.plural = this.table.name
 
         model.calculateDataByName()
-        model.saveFromInterface()
 
         return model
     }

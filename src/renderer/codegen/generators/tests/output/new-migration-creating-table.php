@@ -13,7 +13,10 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->autoIncrement();
+            $table
+                ->bigInteger('id')
+                ->unsigned()
+                ->autoIncrement();
             $table->string('title');
             $table->string('content');
             $table->string('token');
@@ -22,8 +25,8 @@ return new class extends Migration {
             $table->index('token');
             $table
                 ->foreign('user_id')
-                ->references('users')
-                ->on('id');
+                ->references('id')
+                ->on('users');
         });
     }
 

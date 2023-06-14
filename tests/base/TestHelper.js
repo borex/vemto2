@@ -7,6 +7,9 @@ import Index from "@Common/models/Index"
 import Column from "@Common/models/Column"
 import Project from "@Common/models/Project"
 import FileSystem from "@Main/base/FileSystem"
+import CreateDefaultTableModel from "@Common/models/services/tables/CreateDefaultTableModel"
+import Relationship from "@Common/models/Relationship"
+import CalculateCommonRelationshipsData from "@Common/models/services/relationships/Calculators/CalculateCommonRelationshipsData"
 
 export default new class TestHelper {
 
@@ -56,6 +59,30 @@ export default new class TestHelper {
         return table
     }
 
+    createTableWithPrimaryKey(data = {}) {
+        const table = this.createTable(data)
+
+        this.createColumn({
+            table: table,
+            name: 'id',
+            type: 'bigInteger',
+            unsigned: true,
+            autoIncrement: true
+        })
+
+        return table
+    }
+
+    createTableWithModel(data = {}) {
+        const table = this.createTableWithPrimaryKey(data)
+
+        CreateDefaultTableModel.setTable(table)
+            .process()
+            .save()
+
+        return table
+    }
+
     createTableWithSchemaState(data = {}) {
         const table = this.createTable(data)
 
@@ -87,6 +114,22 @@ export default new class TestHelper {
         return column
     }
 
+    createCommonRelationship(type, model, relatedModel) {
+        const relationship = new Relationship({
+            type: type,
+            modelId: model.id,
+            relatedModelId: relatedModel.id
+        })
+
+        CalculateCommonRelationshipsData
+            .setRelationship(relationship)
+            .calculateDefaultData()
+
+        relationship.save()
+
+        return relationship
+    }
+
     createColumnWithSchemaState(data = {}) {
         const column = this.createColumn(data)
 
@@ -106,8 +149,8 @@ export default new class TestHelper {
         return this.createIndex({
             ...data,
             type: "foreign",
-            references: data.references || "id",
-            on: data.on || "users"
+            references: data.references || "users",
+            on: data.on || "id"
         })
     }
 

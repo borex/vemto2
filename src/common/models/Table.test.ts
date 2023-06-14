@@ -2,6 +2,7 @@ import Table from './Table'
 import TestHelper from '@Tests/base/TestHelper'
 import MockDatabase from '@Tests/base/MockDatabase'
 import { test, expect, beforeEach } from '@jest/globals'
+import Relationship from './Relationship'
 
 beforeEach(() => {
     MockDatabase.start()
@@ -250,30 +251,33 @@ test('It can get all the indexes keyed by name', () => {
 })
 
 test('It can check if a table has related tables', () => {
-    const table = TestHelper.createTable()
+    const usersTable = TestHelper.createTableWithModel(),
+        postsTable = TestHelper.createTableWithModel({ name: 'posts' })
 
-    expect(table.hasRelatedTables()).toBe(true)
+    TestHelper.createCommonRelationship('HasMany', usersTable.models[0], postsTable.models[0])
+
+    expect(usersTable.hasRelatedTables()).toBe(true)
 })
 
 test('It can get the related tables', () => {
-    const table = TestHelper.createTable({ name: 'users' })
+    const usersTable = TestHelper.createTableWithModel(),
+        postsTable = TestHelper.createTableWithModel({ name: 'posts' })
 
-    const relatedTables = table.getRelatedTables()
+    TestHelper.createCommonRelationship('HasMany', usersTable.models[0], postsTable.models[0])
 
-    expect(relatedTables.length).toBe(2)
+    const relatedTables = usersTable.getRelatedTables()
+
+    expect(relatedTables.length).toBe(1)
 })
 
 test('It can get the table models', () => {
-    const table = TestHelper.createTable({ name: 'users' })
-
-    const models = table.getModels()
+    const usersTable = TestHelper.createTableWithModel(),
+        models = usersTable.getModels()
 
     expect(models.length).toBe(1)
-
-    expect(models[0].name).toBe('User.php')
-    expect(models[0].relationships.length).toBe(1)
-    expect(models[0].relationships[0].type).toBe('hasMany')
-    expect(models[0].relationships[0].model).toBe('Post')
+    expect(models[0].name).toBe('User')
+    expect(models[0].plural).toBe('Users')
+    expect(models[0].fileName).toBe('User.php')
 })
 
 test('It can check if a table has timestamps', () => {
