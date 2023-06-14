@@ -8,7 +8,7 @@ beforeEach(() => {
 })
 
 test('It can save a new column', () => {
-    const column = new Column()
+    const column = TestHelper.createColumn()
     
     column.name = 'test_column'
     column.save()
@@ -17,7 +17,7 @@ test('It can save a new column', () => {
 })
 
 test('A column has changes when schema state is empty', () => {
-    const column = new Column()
+    const column = TestHelper.createColumn()
     
     column.name = 'test_column'
     column.save()
@@ -302,6 +302,13 @@ test('It can check if a column is an FK', () => {
 
     column.name = 'user_id'
     column.save()
+
+    const index = TestHelper.createIndex({
+        table: column.table,
+        type: 'foreign',
+    })
+
+    index.relation('indexColumns').attachUnique(column)
 
     expect(column.isForeign()).toBe(true)
 })
