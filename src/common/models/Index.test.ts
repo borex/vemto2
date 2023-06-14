@@ -7,10 +7,6 @@ beforeEach(() => {
     MockDatabase.start()
 })
 
-test('The Index model identifier is correct', () => {
-    expect(Index.identifier()).toBe('Index')
-})
-
 test('It can save a new index', () => {
     const index = new Index()
     

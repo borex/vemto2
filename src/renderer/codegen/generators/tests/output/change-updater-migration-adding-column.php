@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::table('users', function (Blueprint $table) {
             $table->renameColumn('avatar', 'avatar_renamed');
-            $table->string('new_column', 255);
+            $table->string('new_column', 255)->after('updated_at');
         });
     }
 

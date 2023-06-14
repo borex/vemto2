@@ -7,10 +7,6 @@ beforeEach(() => {
     MockDatabase.start()
 })
 
-test('The Column model identifier is correct', () => {
-    expect(Column.identifier()).toBe('Column')
-})
-
 test('It can save a new column', () => {
     const column = new Column()
     

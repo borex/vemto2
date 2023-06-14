@@ -5,8 +5,9 @@ import { test, expect, beforeEach, jest } from '@jest/globals'
 import TestHelper from '@Renderer/../../tests/base/TestHelper'
 import schemaData from '@Common/services/tests/input/schema-reader-L9.json'
 import TablesFromMigrationsBuilder from '@Common/services/TablesFromMigrationsBuilder'
-import Column from '@Renderer/../common/models/Column'
-import Index from '@Renderer/../common/models/Index'
+import Column from '@Common/models/Column'
+import Index from '@Common/models/Index'
+import Table from '@Common/models/Table'
 
 jest.mock('@Renderer/services/wrappers/Main')
 
@@ -59,11 +60,15 @@ test('It can add the migration to the generation queue and remove the table from
 
     UpdateExistingMigration.setTable(table)
 
-    expect(table.project.hasChangedTables()).toBe(true)
+    let tableHasChanges = table.project.getChangedTables().some((changedTable: Table) => changedTable.id === table.id)
+
+    expect(tableHasChanges).toBe(true)
 
     await UpdateExistingMigration.run()
 
-    expect(table.project.hasChangedTables()).toBe(false)
+    tableHasChanges = table.project.getChangedTables().some((changedTable: Table) => changedTable.id === table.id)
+
+    expect(tableHasChanges).toBe(false)
 })
 
 test('It can change a creation migration when a column was renamed', async () => {
@@ -213,16 +218,24 @@ test('It can change a creation migration when a foreign index was added', async 
     processSchemaData(project)
 
     // Using password_resets table as it has a creation migration
-    const table = project.findTableByName('password_resets'),
+    const table = project.findTableByName('posts'),
         index = new Index
 
     index.name = 'new_index'
     index.tableId = table.id
-    index.columns = ['user_id']
     index.type = 'foreign'
-    index.references = 'users'
-    index.on = 'id'
+
+    index.columns = ['tag_id']
+
+    index.references = 'id'
+    index.referencesColumnId = project.findTableByName('tags').findColumnByName('id').id
+
+    index.on = 'tags'
+    index.onTableId = project.findTableByName('tags').id
+
     index.saveFromInterface()
+
+    index.relation('indexColumns').attachUnique(table.findColumnByName('tag_id'))
 
     UpdateExistingMigration.setTable(table)
 
@@ -240,18 +253,27 @@ test('It can change a creation migration when a foreign index with cascades was 
     processSchemaData(project)
 
     // Using password_resets table as it has a creation migration
-    const table = project.findTableByName('password_resets'),
+    const table = project.findTableByName('posts'),
         index = new Index
 
     index.name = 'new_index'
     index.tableId = table.id
-    index.columns = ['user_id']
     index.type = 'foreign'
-    index.references = 'users'
-    index.on = 'id'
+
+    index.columns = ['tag_id']
+
+    index.references = 'id'
+    index.referencesColumnId = project.findTableByName('tags').findColumnByName('id').id
+
+    index.on = 'tags'
+    index.onTableId = project.findTableByName('tags').id
+
     index.onDelete = 'cascade'
     index.onUpdate = 'cascade'
+
     index.saveFromInterface()
+    
+    index.relation('indexColumns').attachUnique(table.findColumnByName('tag_id'))
 
     UpdateExistingMigration.setTable(table)
 

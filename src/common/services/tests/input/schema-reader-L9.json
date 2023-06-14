@@ -120,7 +120,7 @@
             "foreigns": [],
             "migrations": [
                 {
-                    "migration": "D:\\Code\\vemto2\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2014_10_12_000000_create_users_table.php",
+                    "migration": "D:\\Code\\vemtoo\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2014_10_12_000000_create_users_table.php",
                     "relativePath": "\/database\/migrations\/2014_10_12_000000_create_users_table.php",
                     "migrationName": "2014_10_12_000000_create_users_table",
                     "datePrefix": "2014_10_12",
@@ -230,7 +230,7 @@
                     ]
                 },
                 {
-                    "migration": "D:\\Code\\vemto2\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2019_12_14_000002_change_users_table.php",
+                    "migration": "D:\\Code\\vemtoo\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2019_12_14_000002_change_users_table.php",
                     "relativePath": "\/database\/migrations\/2019_12_14_000002_change_users_table.php",
                     "migrationName": "2019_12_14_000002_change_users_table",
                     "datePrefix": "2019_12_14",
@@ -317,7 +317,7 @@
             "foreigns": [],
             "migrations": [
                 {
-                    "migration": "D:\\Code\\vemto2\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2014_10_12_100000_create_password_resets_table.php",
+                    "migration": "D:\\Code\\vemtoo\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2014_10_12_100000_create_password_resets_table.php",
                     "relativePath": "\/database\/migrations\/2014_10_12_100000_create_password_resets_table.php",
                     "migrationName": "2014_10_12_100000_create_password_resets_table",
                     "datePrefix": "2014_10_12",
@@ -433,7 +433,7 @@
             "foreigns": [],
             "migrations": [
                 {
-                    "migration": "D:\\Code\\vemto2\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2019_08_19_000000_create_failed_jobs_table.php",
+                    "migration": "D:\\Code\\vemtoo\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2019_08_19_000000_create_failed_jobs_table.php",
                     "relativePath": "\/database\/migrations\/2019_08_19_000000_create_failed_jobs_table.php",
                     "migrationName": "2019_08_19_000000_create_failed_jobs_table",
                     "datePrefix": "2019_08_19",
@@ -620,7 +620,7 @@
             "foreigns": [],
             "migrations": [
                 {
-                    "migration": "D:\\Code\\vemto2\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2019_12_14_000001_create_personal_access_tokens_table.php",
+                    "migration": "D:\\Code\\vemtoo\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2019_12_14_000001_create_personal_access_tokens_table.php",
                     "relativePath": "\/database\/migrations\/2019_12_14_000001_create_personal_access_tokens_table.php",
                     "migrationName": "2019_12_14_000001_create_personal_access_tokens_table",
                     "datePrefix": "2019_12_14",
@@ -752,14 +752,24 @@
                     "order": 1,
                     "creationOrder": 2
                 },
+                "tag_id": {
+                    "type": "bigInteger",
+                    "name": "tag_id",
+                    "autoIncrement": false,
+                    "unsigned": true,
+                    "table": "posts",
+                    "creatorMethod": "unsignedBigInteger",
+                    "order": 2,
+                    "creationOrder": 3
+                },
                 "title": {
                     "type": "string",
                     "name": "title",
                     "length": 255,
                     "table": "posts",
                     "creatorMethod": "string",
-                    "order": 2,
-                    "creationOrder": 3
+                    "order": 3,
+                    "creationOrder": 4
                 },
                 "slug": {
                     "type": "string",
@@ -767,16 +777,16 @@
                     "length": 255,
                     "table": "posts",
                     "creatorMethod": "string",
-                    "order": 3,
-                    "creationOrder": 4
+                    "order": 4,
+                    "creationOrder": 5
                 },
                 "body": {
                     "type": "text",
                     "name": "body",
                     "table": "posts",
                     "creatorMethod": "text",
-                    "order": 4,
-                    "creationOrder": 5
+                    "order": 5,
+                    "creationOrder": 6
                 },
                 "created_at": {
                     "type": "timestamp",
@@ -785,8 +795,8 @@
                     "table": "posts",
                     "creatorMethod": "timestamps",
                     "nullable": true,
-                    "order": 5,
-                    "creationOrder": 6
+                    "order": 6,
+                    "creationOrder": 7
                 },
                 "updated_at": {
                     "type": "timestamp",
@@ -795,8 +805,8 @@
                     "table": "posts",
                     "creatorMethod": "timestamps",
                     "nullable": true,
-                    "order": 6,
-                    "creationOrder": 7
+                    "order": 7,
+                    "creationOrder": 8
                 }
             },
             "indexes": {
@@ -837,7 +847,7 @@
             "foreigns": [],
             "migrations": [
                 {
-                    "migration": "D:\\Code\\vemto2\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2019_12_15_000000_create_posts_table.php",
+                    "migration": "D:\\Code\\vemtoo\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2019_12_15_000000_create_posts_table.php",
                     "relativePath": "\/database\/migrations\/2019_12_15_000000_create_posts_table.php",
                     "migrationName": "2019_12_15_000000_create_posts_table",
                     "datePrefix": "2019_12_15",
@@ -858,6 +868,14 @@
                             "unsigned": true,
                             "table": "posts",
                             "creatorMethod": "foreignId"
+                        },
+                        {
+                            "type": "bigInteger",
+                            "name": "tag_id",
+                            "autoIncrement": false,
+                            "unsigned": true,
+                            "table": "posts",
+                            "creatorMethod": "unsignedBigInteger"
                         },
                         {
                             "type": "string",
@@ -1065,7 +1083,7 @@
             "foreigns": [],
             "migrations": [
                 {
-                    "migration": "D:\\Code\\vemto2\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2019_12_15_000001_create_videos_table.php",
+                    "migration": "D:\\Code\\vemtoo\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2019_12_15_000001_create_videos_table.php",
                     "relativePath": "\/database\/migrations\/2019_12_15_000001_create_videos_table.php",
                     "migrationName": "2019_12_15_000001_create_videos_table",
                     "datePrefix": "2019_12_15",
@@ -1193,7 +1211,7 @@
                     ]
                 },
                 {
-                    "migration": "D:\\Code\\vemto2\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2019_12_15_000002_change_videos_table.php",
+                    "migration": "D:\\Code\\vemtoo\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2019_12_15_000002_change_videos_table.php",
                     "relativePath": "\/database\/migrations\/2019_12_15_000002_change_videos_table.php",
                     "migrationName": "2019_12_15_000002_change_videos_table",
                     "datePrefix": "2019_12_15",
@@ -1302,7 +1320,7 @@
             "foreigns": [],
             "migrations": [
                 {
-                    "migration": "D:\\Code\\vemto2\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2023_03_13_133814_create_products_table.php",
+                    "migration": "D:\\Code\\vemtoo\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2023_03_13_133814_create_products_table.php",
                     "relativePath": "\/database\/migrations\/2023_03_13_133814_create_products_table.php",
                     "migrationName": "2023_03_13_133814_create_products_table",
                     "datePrefix": "2023_03_13",
@@ -1382,6 +1400,197 @@
                 }
             ],
             "name": "products"
+        },
+        "tags": {
+            "columns": {
+                "id": {
+                    "type": "bigInteger",
+                    "name": "id",
+                    "autoIncrement": true,
+                    "unsigned": true,
+                    "table": "tags",
+                    "creatorMethod": "id",
+                    "order": 0,
+                    "creationOrder": 1
+                },
+                "name": {
+                    "type": "string",
+                    "name": "name",
+                    "length": 255,
+                    "table": "tags",
+                    "creatorMethod": "string",
+                    "order": 1,
+                    "creationOrder": 2
+                }
+            },
+            "indexes": [],
+            "uniques": [],
+            "foreigns": [],
+            "migrations": [
+                {
+                    "migration": "D:\\Code\\vemtoo\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2023_05_05_160102_create_tags_table.php",
+                    "relativePath": "\/database\/migrations\/2023_05_05_160102_create_tags_table.php",
+                    "migrationName": "2023_05_05_160102_create_tags_table",
+                    "datePrefix": "2023_05_05",
+                    "fullPrefix": "2023_05_05_160102",
+                    "addedColumns": [
+                        {
+                            "type": "bigInteger",
+                            "name": "id",
+                            "autoIncrement": true,
+                            "unsigned": true,
+                            "table": "tags",
+                            "creatorMethod": "id"
+                        },
+                        {
+                            "type": "string",
+                            "name": "name",
+                            "length": 255,
+                            "table": "tags",
+                            "creatorMethod": "string"
+                        }
+                    ],
+                    "changedColumns": [],
+                    "droppedColumns": [],
+                    "renamedColumns": [],
+                    "commands": [
+                        {
+                            "name": "create",
+                            "table": "tags"
+                        }
+                    ],
+                    "createdTables": [
+                        "tags"
+                    ]
+                }
+            ],
+            "name": "tags"
+        },
+        "taggeable": {
+            "columns": {
+                "tag_id": {
+                    "type": "bigInteger",
+                    "name": "tag_id",
+                    "autoIncrement": false,
+                    "unsigned": true,
+                    "table": "taggeable",
+                    "creatorMethod": "foreignId",
+                    "order": 0,
+                    "creationOrder": 1
+                },
+                "taggeable_type": {
+                    "type": "string",
+                    "name": "taggeable_type",
+                    "length": 255,
+                    "table": "taggeable",
+                    "creatorMethod": "morphs",
+                    "order": 1,
+                    "creationOrder": 2
+                },
+                "taggeable_id": {
+                    "type": "bigInteger",
+                    "name": "taggeable_id",
+                    "autoIncrement": false,
+                    "unsigned": true,
+                    "table": "taggeable",
+                    "creatorMethod": "morphs",
+                    "order": 2,
+                    "creationOrder": 3
+                }
+            },
+            "indexes": {
+                "taggeable_tag_id_foreign": {
+                    "name": "taggeable_tag_id_foreign",
+                    "columns": [
+                        "tag_id"
+                    ],
+                    "algorithm": null,
+                    "references": "id",
+                    "on": "tags",
+                    "table": "taggeable",
+                    "type": "foreign"
+                },
+                "taggeable_taggeable_type_taggeable_id_index": {
+                    "name": "taggeable_taggeable_type_taggeable_id_index",
+                    "columns": [
+                        "taggeable_type",
+                        "taggeable_id"
+                    ],
+                    "algorithm": null,
+                    "table": "taggeable",
+                    "type": "index"
+                }
+            },
+            "uniques": [],
+            "foreigns": [],
+            "migrations": [
+                {
+                    "migration": "D:\\Code\\vemtoo\\src\\php\\laravel-base\\laravel9-basic\/database\/migrations\/2023_05_10_175540_create_taggeable_table.php",
+                    "relativePath": "\/database\/migrations\/2023_05_10_175540_create_taggeable_table.php",
+                    "migrationName": "2023_05_10_175540_create_taggeable_table",
+                    "datePrefix": "2023_05_10",
+                    "fullPrefix": "2023_05_10_175540",
+                    "addedColumns": [
+                        {
+                            "type": "bigInteger",
+                            "name": "tag_id",
+                            "autoIncrement": false,
+                            "unsigned": true,
+                            "table": "taggeable",
+                            "creatorMethod": "foreignId"
+                        },
+                        {
+                            "type": "string",
+                            "name": "taggeable_type",
+                            "length": 255,
+                            "table": "taggeable",
+                            "creatorMethod": "morphs"
+                        },
+                        {
+                            "type": "bigInteger",
+                            "name": "taggeable_id",
+                            "autoIncrement": false,
+                            "unsigned": true,
+                            "table": "taggeable",
+                            "creatorMethod": "morphs"
+                        }
+                    ],
+                    "changedColumns": [],
+                    "droppedColumns": [],
+                    "renamedColumns": [],
+                    "commands": [
+                        {
+                            "name": "create",
+                            "table": "taggeable"
+                        },
+                        {
+                            "name": "foreign",
+                            "index": "taggeable_tag_id_foreign",
+                            "columns": [
+                                "tag_id"
+                            ],
+                            "algorithm": null,
+                            "references": "id",
+                            "on": "tags",
+                            "table": "taggeable"
+                        },
+                        {
+                            "name": "index",
+                            "index": "taggeable_taggeable_type_taggeable_id_index",
+                            "columns": [
+                                "taggeable_type",
+                                "taggeable_id"
+                            ],
+                            "algorithm": null,
+                            "table": "taggeable"
+                        }
+                    ],
+                    "createdTables": [
+                        "taggeable"
+                    ]
+                }
+            ],
+            "name": "taggeable"
         }
     },
     "models": [
@@ -1392,12 +1601,17 @@
             "class": "App\\Models\\Post",
             "namespace": "App\\Models",
             "path": "Models\\Post.php",
-            "hasFillable": false,
-            "fillable": [],
+            "hasFillable": true,
+            "fillable": [
+                "title",
+                "body"
+            ],
             "casts": [],
             "dates": [],
             "hasGuarded": false,
-            "guarded": [],
+            "guarded": [
+                "*"
+            ],
             "hasHidden": false,
             "hidden": [],
             "appends": [],
@@ -1405,26 +1619,151 @@
                 {
                     "name": "user",
                     "type": "BelongsTo",
+                    "foreignKeyName": "user_id",
+                    "ownerKeyName": "id",
+                    "foreignPivotKeyName": null,
+                    "relatedPivotKeyName": null,
+                    "parentKeyName": null,
+                    "relatedKeyName": null,
+                    "pivotTableName": null,
+                    "morphType": null,
+                    "localKeyName": null,
+                    "firstKeyName": null,
+                    "secondKeyName": null,
                     "relatedTableName": "users",
                     "relatedModelName": "App\\Models\\User",
                     "parentTableName": "posts",
                     "parentModelName": "App\\Models\\Post",
-                    "foreignKeyName": "user_id",
-                    "localKeyName": null,
-                    "ownerKeyName": "id",
-                    "relatedKeyName": null,
-                    "morphType": null,
                     "method": "publicfunctionuser()\r\n{\r\nreturn$this->belongsTo(User::class);\r\n}\r\n"
+                },
+                {
+                    "name": "tags",
+                    "type": "BelongsToMany",
+                    "foreignKeyName": null,
+                    "ownerKeyName": null,
+                    "foreignPivotKeyName": "post_id",
+                    "relatedPivotKeyName": "tag_id",
+                    "parentKeyName": "id",
+                    "relatedKeyName": "id",
+                    "pivotTableName": "post_tag",
+                    "morphType": null,
+                    "localKeyName": null,
+                    "firstKeyName": null,
+                    "secondKeyName": null,
+                    "relatedTableName": "tags",
+                    "relatedModelName": "App\\Models\\Tag",
+                    "parentTableName": "posts",
+                    "parentModelName": "App\\Models\\Post",
+                    "method": "publicfunctiontags()\r\n{\r\nreturn$this->belongsToMany(Tag::class);\r\n}\r\n"
                 }
             ],
             "methods": [
                 {
                     "name": "user",
                     "class": "App\\Models\\Post"
+                },
+                {
+                    "name": "tags",
+                    "class": "App\\Models\\Post"
                 }
             ],
             "hasTimestamps": true,
             "hasSoftDeletes": true
+        },
+        {
+            "fileName": "Tag.php",
+            "name": "Tag",
+            "tableName": "tags",
+            "class": "App\\Models\\Tag",
+            "namespace": "App\\Models",
+            "path": "Models\\Tag.php",
+            "hasFillable": false,
+            "fillable": [],
+            "casts": [],
+            "dates": [],
+            "hasGuarded": true,
+            "guarded": [],
+            "hasHidden": false,
+            "hidden": [],
+            "appends": [],
+            "relationships": [
+                {
+                    "name": "posts",
+                    "type": "BelongsToMany",
+                    "foreignKeyName": null,
+                    "ownerKeyName": null,
+                    "foreignPivotKeyName": "tag_id",
+                    "relatedPivotKeyName": "post_id",
+                    "parentKeyName": "id",
+                    "relatedKeyName": "id",
+                    "pivotTableName": "post_tag",
+                    "morphType": null,
+                    "localKeyName": null,
+                    "firstKeyName": null,
+                    "secondKeyName": null,
+                    "relatedTableName": "posts",
+                    "relatedModelName": "App\\Models\\Post",
+                    "parentTableName": "tags",
+                    "parentModelName": "App\\Models\\Tag",
+                    "method": "publicfunctionposts()\r\n{\r\nreturn$this->belongsToMany(Post::class);\r\n}\r\n"
+                },
+                {
+                    "name": "users",
+                    "type": "HasManyThrough",
+                    "foreignKeyName": "post_id",
+                    "ownerKeyName": null,
+                    "foreignPivotKeyName": null,
+                    "relatedPivotKeyName": null,
+                    "parentKeyName": null,
+                    "relatedKeyName": null,
+                    "pivotTableName": null,
+                    "morphType": null,
+                    "localKeyName": "id",
+                    "firstKeyName": "tag_id",
+                    "secondKeyName": null,
+                    "relatedTableName": "users",
+                    "relatedModelName": "App\\Models\\User",
+                    "parentTableName": "posts",
+                    "parentModelName": "App\\Models\\Post",
+                    "method": "publicfunctionusers()\r\n{\r\nreturn$this->hasManyThrough(User::class,Post::class);\r\n}\r\n"
+                },
+                {
+                    "name": "taggeable",
+                    "type": "MorphTo",
+                    "foreignKeyName": "taggeable_id",
+                    "ownerKeyName": null,
+                    "foreignPivotKeyName": null,
+                    "relatedPivotKeyName": null,
+                    "parentKeyName": null,
+                    "relatedKeyName": null,
+                    "pivotTableName": null,
+                    "morphType": "taggeable_type",
+                    "localKeyName": null,
+                    "firstKeyName": null,
+                    "secondKeyName": null,
+                    "relatedTableName": "tags",
+                    "relatedModelName": "App\\Models\\Tag",
+                    "parentTableName": "tags",
+                    "parentModelName": "App\\Models\\Tag",
+                    "method": "publicfunctiontaggeable()\r\n{\r\nreturn$this->morphTo();\r\n}\r\n"
+                }
+            ],
+            "methods": [
+                {
+                    "name": "posts",
+                    "class": "App\\Models\\Tag"
+                },
+                {
+                    "name": "users",
+                    "class": "App\\Models\\Tag"
+                },
+                {
+                    "name": "taggeable",
+                    "class": "App\\Models\\Tag"
+                }
+            ],
+            "hasTimestamps": false,
+            "hasSoftDeletes": false
         },
         {
             "fileName": "User.php",
@@ -1433,34 +1772,75 @@
             "class": "App\\Models\\User",
             "namespace": "App\\Models",
             "path": "Models\\User.php",
-            "hasFillable": false,
-            "fillable": [],
-            "casts": [],
+            "hasFillable": true,
+            "fillable": [
+                "name",
+                "email",
+                "password"
+            ],
+            "casts": {
+                "email_verified_at": "datetime"
+            },
             "dates": [],
             "hasGuarded": false,
-            "guarded": [],
-            "hasHidden": false,
-            "hidden": [],
+            "guarded": [
+                "*"
+            ],
+            "hasHidden": true,
+            "hidden": [
+                "password",
+                "remember_token"
+            ],
             "appends": [],
             "relationships": [
                 {
                     "name": "posts",
                     "type": "HasMany",
+                    "foreignKeyName": "user_id",
+                    "ownerKeyName": null,
+                    "foreignPivotKeyName": null,
+                    "relatedPivotKeyName": null,
+                    "parentKeyName": null,
+                    "relatedKeyName": null,
+                    "pivotTableName": null,
+                    "morphType": null,
+                    "localKeyName": "id",
+                    "firstKeyName": null,
+                    "secondKeyName": null,
                     "relatedTableName": "posts",
                     "relatedModelName": "App\\Models\\Post",
                     "parentTableName": "users",
                     "parentModelName": "App\\Models\\User",
-                    "foreignKeyName": "user_id",
-                    "localKeyName": "id",
-                    "ownerKeyName": null,
-                    "relatedKeyName": null,
-                    "morphType": null,
                     "method": "publicfunctionposts()\r\n{\r\nreturn$this->hasMany(Post::class);\r\n}\r\n"
+                },
+                {
+                    "name": "tags",
+                    "type": "MorphOne",
+                    "foreignKeyName": "taggeable_id",
+                    "ownerKeyName": null,
+                    "foreignPivotKeyName": null,
+                    "relatedPivotKeyName": null,
+                    "parentKeyName": null,
+                    "relatedKeyName": null,
+                    "pivotTableName": null,
+                    "morphType": "taggeable_type",
+                    "localKeyName": "id",
+                    "firstKeyName": null,
+                    "secondKeyName": null,
+                    "relatedTableName": "tags",
+                    "relatedModelName": "App\\Models\\Tag",
+                    "parentTableName": "users",
+                    "parentModelName": "App\\Models\\User",
+                    "method": "publicfunctiontags()\r\n{\r\nreturn$this->morphOne(Tag::class,'taggeable','taggeable_type','taggeable_id','id');\r\n}\r\n"
                 }
             ],
             "methods": [
                 {
                     "name": "posts",
+                    "class": "App\\Models\\User"
+                },
+                {
+                    "name": "tags",
                     "class": "App\\Models\\User"
                 }
             ],

@@ -7,10 +7,6 @@ beforeEach(() => {
     MockDatabase.start()
 })
 
-test('The Project model identifier is correct', () => {
-    expect(Project.identifier()).toBe('Project')
-})
-
 test('It can find or create a project', () => {
     const project = Project.findOrCreate()
 

@@ -12,15 +12,37 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('email', 255)->index();
-            $table->string('token', 255);
+        Schema::create('posts', function (Blueprint $table) {
+            $table
+                ->bigInteger('id')
+                ->unsigned()
+                ->autoIncrement();
+            $table
+                ->bigInteger('user_id')
+                ->unsigned()
+                ->index();
+            $table->bigInteger('tag_id')->unsigned();
+            $table->string('title', 255);
+            $table
+                ->string('slug', 255)
+                ->unique()
+                ->index();
+            $table->text('body');
             $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
 
             $table
                 ->foreign('user_id')
-                ->references('users')
-                ->on('id');
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->unique('slug');
+            $table->index(['user_id', 'slug']);
+            $table
+                ->foreign('tag_id')
+                ->references('id')
+                ->on('tags');
         });
     }
 
@@ -31,6 +53,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('password_resets');
+        Schema::dropIfExists('posts');
     }
 };
