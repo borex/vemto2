@@ -49,7 +49,7 @@ export default class Project extends RelaDB.Model {
         return project
     }
 
-    isEmtpy(): boolean {
+    isEmpty(): boolean {
         return this.id === undefined
     }
 

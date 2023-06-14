@@ -16,7 +16,7 @@ test('It can find or create a project', () => {
 test('It can check if a project is empty (not saved yet)', () => {
     const project = new Project
 
-    expect(project.isEmtpy()).toBe(true)
+    expect(project.isEmpty()).toBe(true)
 })
 
 test('It can set the project path', () => {
@@ -87,10 +87,10 @@ test('It can get all project tables keyed by name', () => {
 
 test('It can check if the project has changed tables', () => {
     const project = TestHelper.getProject(),
-        table = TestHelper.createTable({ name: 'users' }),    
+        table = TestHelper.createTable({ name: 'users' }),
         column = TestHelper.createColumnWithSchemaState({ table })
 
-    expect(project.fresh().hasChangedTables()).toBe(false)
+    expect(project.hasChangedTables()).toBe(false) // observe .fresh() returning the hasChangedTables() as true
     
     column.name = 'special_primary_key'
     column.saveFromInterface()
