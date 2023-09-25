@@ -369,6 +369,14 @@ export default class Project extends RelaDB.Model {
         return this.navs.filter(nav => nav.isRoot())
     }
 
+    getNavById(navId: string): Nav {
+        return this.navs.find(nav => nav.id == navId)
+    }
+
+    getNavs(): Nav[] {
+        return this.navs
+    }
+
     generateBasicData() {
         (new GenerateBasicProjectData(this)).handle()
     }

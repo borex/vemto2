@@ -14,9 +14,10 @@
         showingCreateNavigationModal = ref<boolean>(false),
         navigations = ref<Nav[]>([])
 
-    const navigableId = ref<number | null>(null),
+    const navigableId = ref<string | null>(null),
         navigableType = ref<string | null>("Crud"),
-        name = ref<string | null>(null)
+        name = ref<string | null>(null),
+        parentNavId = ref<string | null>(null)
 
     const editNavigation = (navigation: Nav) => {
         if(navigation.id === editingNavigation.value?.id) return
@@ -41,8 +42,11 @@
             name: name.value,
             navigableId: navigableId.value,
             navigableType: navigableType.value,
-            projectId: projectStore.project.id
+            projectId: projectStore.project.id,
+            parentNavId: parentNavId.value,
         })
+
+        console.log('criou', parentNavId.value)
 
         nav.save()
 
@@ -56,27 +60,36 @@
         navigableId.value = null
         navigableType.value = null
         name.value = null
+        parentNavId.value = null
     }
 
     const close = () => {
         showingCreateNavigationModal.value = false
     }
 
-    const saveNavigationOrder = (event) => {
-        const { newIndex, oldIndex, movedContext } = event;
-        console.log(event, movedContext)
-        const movedNavigation = movedContext.element;
+    const saveNavigationOrder = () => {
+        navigations.value.forEach((navigation: Nav, index: number) => {
+            navigation.children.forEach((childNavigation: Nav) => {
+                childNavigation.parentNavId = navigation.id
+                childNavigation.save()
+            })
 
-        console.log(movedNavigation)
-        // const newParentNav = projectStore.project.getRootNavs().find(nav => nav.children.includes(movedNavigation));
+            const rootNavigation = projectStore.project.getNavById(navigation.id)
 
-        // movedNavigation.parentNavId = newParentNav ? newParentNav.id : null;
+            if(!rootNavigation) return
 
-        // navigation.children.forEach((nav: Nav) => nav.save())
+            rootNavigation.save()
+        })
+
+        reloadNavigations()
+    }
+
+    const reloadNavigations = () => {
+        navigations.value = projectStore.project.getRootNavs()
     }
 
     onMounted(() => {
-        navigations.value = projectStore.project.getRootNavs()
+        reloadNavigations()
     })
 </script>
 
@@ -99,6 +112,11 @@
                     <option :value="null" disabled>Select a Navigable Type</option>
                     <option value="Crud">Crud</option>
                     <option value="Page">Page</option>
+                </UiSelect>
+
+                <UiSelect v-model="parentNavId" label="Parent Nav">
+                    <option :value="null" disabled>Root</option>
+                    <option v-for="nav in projectStore.project.getNavs()" :value="nav.id" :key="nav.id">{{ nav.name }}</option>
                 </UiSelect>
 
                 <UiSelect v-model="navigableId" label="Crud">
@@ -127,6 +145,8 @@
                     @editNavigation="editNavigation"
                     @cancelEditing="cancelEditing"
                     @saveNavigation="saveNavigation"
+                    @saveNavigationOrder="saveNavigationOrder"
+                    @childrenNavigationUpdated="reloadNavigations"
                 />
             </template>
         </Draggable>

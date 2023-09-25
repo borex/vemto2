@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import Draggable from 'vuedraggable';
     import Nav from '@Common/models/Nav';
-    import { defineProps, PropType, toRef, Ref } from 'vue';
+    import { defineProps, PropType, toRef, Ref, defineEmits, onMounted, ref } from 'vue';
     import UiText from '@Renderer/components/ui/UiText.vue';
     import UiButton from '@Renderer/components/ui/UiButton.vue';
     import UiSelect from '@Renderer/components/ui/UiSelect.vue';
@@ -25,29 +25,33 @@
             },
         }),
         nav = toRef(props, 'nav') as Ref<Nav | null>,
-        projectStore = useProjectStore()
+        projectStore = useProjectStore(),
+        emit = defineEmits(['childrenNavigationUpdated', 'editNavigation', 'cancelEditing', 'saveNavigation', 'saveNavigationOrder']),
+        navigations = ref<Nav[]>([])
 
     const deleteNavigation = (navigation: Nav) => {
         if(!confirm("Are you sure you want to delete this navigation?")) return
 
         navigation.delete()
+
+        emit('childrenNavigationUpdated')
     }
 
-    const saveNavigationOrder = (event, navigation: Nav) => {
-        const { newIndex, oldIndex, movedContext } = event;
-        const movedNavigation = movedContext.element;
-
-        console.log(movedNavigation)
-        // const newParentNav = projectStore.project.getRootNavs().find(nav => nav.children.includes(movedNavigation));
-
-        // movedNavigation.parentNavId = newParentNav ? newParentNav.id : null;
-
-        // navigation.children.forEach((nav: Nav) => nav.save())
+    const saveNavigationOrder = (event: any, navigation: Nav) => {
+            console.log(navigations.value)
     }
+
+    onMounted(() => {
+        navigations.value = props.nav.children
+
+        if(navigations.value.length) {
+            console.log(navigations.value)
+        }
+    })
 </script>
 
 <template>
-    <div>
+    <div :class="{ 'bg-white/[2%] pb-2 mb-2': !isChildren }" :id="nav.id">
         <div
             @click="$emit('editNavigation', nav)"
             class="mb-2 border border-slate-700 bg-slate-850 rounded-lg p-3 hover:bg-slate-800 w-96 flex items-center"
@@ -88,8 +92,8 @@
 
         <template v-if="nav.children">
             <Draggable 
-                v-model="nav.children"
-                item-key="app-navs-draggable"
+                v-model="navigations"
+                item-key="app-children-navs-draggable"
                 group="navigations"
                 @end="saveNavigationOrder($event, nav)"
             >
@@ -101,6 +105,7 @@
                         @editNavigation="$emit('editNavigation', element)"
                         @saveNavigation="$emit('saveNavigation', element)"
                         @cancelEditing="$emit('cancelEditing')"
+                        @childrenNavigationUpdated="$emit('childrenNavigationUpdated')"
                     />
                 </template>
             </Draggable>
