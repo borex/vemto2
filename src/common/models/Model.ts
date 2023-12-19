@@ -14,6 +14,14 @@ import AbstractSchemaModel from "./composition/AbstractSchemaModel"
 
 import { uniq } from 'lodash'
 import { snakeCase } from "change-case"
+import HiddenModelColumn from "./HiddenModelColumn"
+import FillHiddenColumns from "./services/models/Fillers/FillHiddenColumns"
+import DatesModelColumn from "./DatesModelColumn"
+import FillDatesColumns from "./services/models/Fillers/FillDatesColumns"
+import AppendsModelColumn from "./AppendsModelColumn"
+import FillAppendsColumns from "./services/models/Fillers/FillAppendsColumns"
+import CastsModelColumn from "./CastsModelColumn"
+import FillCastsColumns from "./services/models/Fillers/FillCastsColumns"
 
 export default class Model extends AbstractSchemaModel implements SchemaModel {
     id: string
@@ -50,7 +58,6 @@ export default class Model extends AbstractSchemaModel implements SchemaModel {
     fillable: string[]
     fillableColumns: Column[]
 
-    hasHidden: boolean
     hidden: string[]
     hiddenColumns: Column[]
 
@@ -77,6 +84,10 @@ export default class Model extends AbstractSchemaModel implements SchemaModel {
 
             fillableColumns: () => this.belongsToMany(Column, FillableModelColumn).cascadeDetach(),
             guardedColumns: () => this.belongsToMany(Column, GuardedModelColumn).cascadeDetach(),
+            hiddenColumns: () => this.belongsToMany(Column, HiddenModelColumn).cascadeDetach(),
+            datesColumns: () => this.belongsToMany(Column, DatesModelColumn).cascadeDetach(),
+            appendsColumns: () => this.belongsToMany(Column, AppendsModelColumn).cascadeDetach(),
+            castsColumns: () => this.belongsToMany(Column, CastsModelColumn).cascadeDetach(),
         }
     }
 
@@ -152,7 +163,6 @@ export default class Model extends AbstractSchemaModel implements SchemaModel {
         this.methods = data.methods
         this.createdFromInterface = false
         this.hasGuarded = data.hasGuarded
-        this.hasHidden = data.hasHidden
         this.hasFillable = data.hasFillable
         this.hasTimestamps = data.hasTimestamps
         this.hasSoftDeletes = data.hasSoftDeletes
@@ -182,6 +192,10 @@ export default class Model extends AbstractSchemaModel implements SchemaModel {
         // Depends on a table
         FillFillableColumns.onModel(this)
         FillGuardedColumns.onModel(this)
+        FillHiddenColumns.onModel(this)
+        FillDatesColumns.onModel(this)
+        FillAppendsColumns.onModel(this)
+        FillCastsColumns.onModel(this)
 
         this.save()
     }
@@ -226,7 +240,6 @@ export default class Model extends AbstractSchemaModel implements SchemaModel {
             appends: this.appends,
             methods: this.methods,
             hasGuarded: this.hasGuarded,
-            hasHidden: this.hasHidden,
             hasFillable: this.hasFillable,
             hasTimestamps: this.hasTimestamps,
             hasSoftDeletes: this.hasSoftDeletes,
@@ -291,10 +304,6 @@ export default class Model extends AbstractSchemaModel implements SchemaModel {
             hasGuarded: DataComparator.booleansAreDifferent(
                 this.schemaState.hasGuarded,
                 comparisonData.hasGuarded
-            ),
-            hasHidden: DataComparator.booleansAreDifferent(
-                this.schemaState.hasHidden,
-                comparisonData.hasHidden
             ),
             hasFillable: DataComparator.booleansAreDifferent(
                 this.schemaState.hasFillable,
