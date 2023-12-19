@@ -489,6 +489,18 @@ export default class Model extends AbstractSchemaModel implements SchemaModel {
         this.saveColumnsProperty(columnsNames, 'guarded', 'guardedColumns')
     }
 
+    saveHiddenColumns(columnsNames: string[]): void {
+        this.saveColumnsProperty(columnsNames, 'hidden', 'hiddenColumns')
+    }
+    
+    saveDatesColumns(columnsNames: string[]): void {
+        this.saveColumnsProperty(columnsNames, 'dates', 'datesColumns')
+    }
+
+    saveAppendsColumns(columnsNames: string[]): void {
+        this.saveColumnsProperty(columnsNames, 'appends', 'appendsColumns')
+    }
+
     saveColumnsProperty(
         columnsNames: string[], 
         type: string, 

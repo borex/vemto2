@@ -14,9 +14,9 @@
     import UiOptionsDropdown from "@Renderer/components/ui/UiOptionsDropdown.vue"
     import UiDropdownItem from "@Renderer/components/ui/UiDropdownItem.vue"
     import { useProjectStore } from "@Renderer/stores/useProjectStore"
-import UiModal from "@Renderer/components/ui/UiModal.vue"
-import RenderableModel from "@Renderer/codegen/sequential/services/model/RenderableModel"
-import HookEditor from "@Renderer/components/editors/HookEditor.vue"
+    import UiModal from "@Renderer/components/ui/UiModal.vue"
+    import RenderableModel from "@Renderer/codegen/sequential/services/model/RenderableModel"
+    import HookEditor from "@Renderer/components/editors/HookEditor.vue"
 
     const onDevelopment = Main.API.onDevelopment()
 
@@ -88,7 +88,7 @@ import HookEditor from "@Renderer/components/editors/HookEditor.vue"
         })
     }
 
-    const saveFillableColumns= (selectValue: Array<Object>): void => {
+    const saveFillableColumns = (selectValue: Array<Object>): void => {
         const columnsNames = selectValue.map((item: any) => item.value)
 
         model.value.saveFillableColumns(columnsNames)
@@ -98,6 +98,24 @@ import HookEditor from "@Renderer/components/editors/HookEditor.vue"
         const columnsNames = selectValue.map((item: any) => item.value)
 
         model.value.saveGuardedColumns(columnsNames)
+    }
+    
+    const saveHiddenColumns = (selectValue: Array<Object>): void => {
+        const columnsNames = selectValue.map((item: any) => item.value)
+
+        model.value.saveHiddenColumns(columnsNames)
+    }
+
+    const saveDatesColumns = (selectValue: Array<Object>): void => {
+        const columnsNames = selectValue.map((item: any) => item.value)
+
+        model.value.saveDatesColumns(columnsNames)
+    }
+
+    const saveAppendsColumns = (selectValue: Array<Object>): void => {
+        const columnsNames = selectValue.map((item: any) => item.value)
+
+        model.value.saveAppendsColumns(columnsNames)
     }
 
     const deleteModel = (): void => {
@@ -174,6 +192,10 @@ import HookEditor from "@Renderer/components/editors/HookEditor.vue"
                 />
             </div>
 
+            <div class="mt-4 text-sm underline underline-offset-4 decoration-slate-600 text-slate-500 text-center">
+                Model Properties
+            </div>
+
             <div class="mt-4 bg-slate-850 rounded-md space-y-1 p-2 flex flex-col gap-1">
                 <div>
                     <UiCheckbox
@@ -210,6 +232,33 @@ import HookEditor from "@Renderer/components/editors/HookEditor.vue"
                         :options="getSelectDataForLayout(model.table.getColumns())"
                     />
                 </div>
+            </div>
+
+            <div class="mt-4 bg-slate-850 rounded-md space-y-1 p-2 flex flex-col gap-1">
+                <UiMultiSelect
+                    inputLabel="Hidden"
+                    :default-value="getSelectDataForLayout(model.hiddenColumns)"
+                    @change="$event => saveHiddenColumns($event)"
+                    :options="getSelectDataForLayout(model.table.getColumns())"
+                />
+            </div>
+
+            <div class="mt-4 bg-slate-850 rounded-md space-y-1 p-2 flex flex-col gap-1">
+                <UiMultiSelect
+                    inputLabel="Dates"
+                    :default-value="getSelectDataForLayout(model.datesColumns)"
+                    @change="$event => saveDatesColumns($event)"
+                    :options="getSelectDataForLayout(model.table.getColumns())"
+                />
+            </div>
+
+            <div class="mt-4 bg-slate-850 rounded-md space-y-1 p-2 flex flex-col gap-1">
+                <UiMultiSelect
+                    inputLabel="Appends"
+                    :default-value="getSelectDataForLayout(model.appendsColumns)"
+                    @change="$event => saveAppendsColumns($event)"
+                    :options="getSelectDataForLayout(model.table.getColumns())"
+                />
             </div>
 
             <div class="mt-4" v-if="onDevelopment">
