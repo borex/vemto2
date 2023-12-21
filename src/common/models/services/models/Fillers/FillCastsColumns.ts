@@ -16,7 +16,6 @@ export default new class FillCastsColumns {
     }
 
     fill() {
-        console.log(this.model.casts)
         Object.entries(this.model.casts).forEach(([columnName, type]) => {
             const column: Column = this.model.table.findColumnByName(columnName)
 
