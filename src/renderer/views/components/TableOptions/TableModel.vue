@@ -9,7 +9,6 @@
     import Main from "@Renderer/services/wrappers/Main"
     import Column from "@Renderer/../common/models/Column"
     import TableModelRelationships from './TableModelRelationships.vue'
-    import UiWarning from "@Renderer/components/ui/UiWarning.vue"
     import UiButton from "@Renderer/components/ui/UiButton.vue"
     import UiTabs from "@Renderer/components/ui/UiTabs.vue"
     import UiOptionsDropdown from "@Renderer/components/ui/UiOptionsDropdown.vue"
@@ -19,7 +18,6 @@
     import RenderableModel from "@Renderer/codegen/sequential/services/model/RenderableModel"
     import HookEditor from "@Renderer/components/editors/HookEditor.vue"
     import { PlusCircleIcon } from "@heroicons/vue/24/outline"
-    import CastsModelColumn from "@Common/models/CastsModelColumn"
 
     const onDevelopment = Main.API.onDevelopment()
 
