@@ -16,12 +16,18 @@ export default new class FillCastsColumns {
     }
 
     fill() {
-        this.model.casts.forEach((columnName: string) => {
+        console.log(this.model.casts)
+        Object.entries(this.model.casts).forEach(([columnName, type]) => {
             const column: Column = this.model.table.findColumnByName(columnName)
 
             if(!column) return
 
-            this.model.relation("castsColumns").attachUnique(column)
+            const pivot = this.model.relation("castsColumns").attachUnique(column)
+
+            if(!pivot) return
+
+            pivot.type = type
+            pivot.save()
         })
     }
 }

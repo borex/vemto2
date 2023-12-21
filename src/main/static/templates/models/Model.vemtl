@@ -49,26 +49,26 @@ class <$ this.model.name $> extends <$ extendsFrom $>
     ];
     <% } %>
 
-    <% if(this.model.hidden && this.model.hidden.length) { %>
+    <% if(this.model.hiddenColumns.length) { %>
     protected $hidden = [
-        <% for(let column of this.model.hidden) { %>
-        '<$ column $>',
+        <% for(let column of this.model.hiddenColumns) { %>
+        '<$ column.name $>',
         <% } %>
     ];
     <% } %>
 
-    <% if(this.model.appends && this.model.appends.length) { %>
+    <% if(this.model.appendsColumns.length) { %>
     protected $appends = [
-        <% for(let column of this.model.appends) { %>
-        '<$ column $>',
+        <% for(let column of this.model.appendsColumns) { %>
+        '<$ column.name $>',
         <% } %>
     ];
     <% } %>
 
-    <% if(this.model.dates && this.model.dates.length) { %>
+    <% if(this.model.datesColumns.length) { %>
     protected $dates = [
-        <% for(let column of this.model.dates) { %>
-        '<$ column $>',
+        <% for(let column of this.model.datesColumns) { %>
+        '<$ column.name $>',
         <% } %>
     ];
     <% } %>

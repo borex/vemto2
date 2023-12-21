@@ -4,6 +4,7 @@
     import UiText from "@Renderer/components/ui/UiText.vue"
     import { TrashIcon } from "@heroicons/vue/24/outline"
     import UiCheckbox from "@Renderer/components/ui/UiCheckbox.vue"
+    import UiSelect from "@Renderer/components/ui/UiSelect.vue"
     import UiMultiSelect from "@Renderer/components/ui/UiMultiSelect.vue"
     import Main from "@Renderer/services/wrappers/Main"
     import Column from "@Renderer/../common/models/Column"
@@ -17,6 +18,8 @@
     import UiModal from "@Renderer/components/ui/UiModal.vue"
     import RenderableModel from "@Renderer/codegen/sequential/services/model/RenderableModel"
     import HookEditor from "@Renderer/components/editors/HookEditor.vue"
+    import { PlusCircleIcon } from "@heroicons/vue/24/outline"
+    import CastsModelColumn from "@Common/models/CastsModelColumn"
 
     const onDevelopment = Main.API.onDevelopment()
 
@@ -33,7 +36,8 @@
         modelPluralReference = ref(null),
         selectedTab = ref("data"),
         showingHooksModal = ref(false),
-        modelHooksContent = ref("")
+        modelHooksContent = ref(""),
+        modelCasts = ref([])
     
     let models: Ref<Array<Model>> = ref([])
 
@@ -53,7 +57,64 @@
         renderableModel.disableHooks()
 
         modelHooksContent.value = await renderableModel.compile()
+
+        loadModelCasts()
     })
+
+    const loadModelCasts = () => {
+        model.value.castsColumns.forEach((column: Column) => {
+            const pivot = model.value.relation('castsColumns').getPivotItem(column)
+
+            modelCasts.value.push([column.id, pivot.type, column.id])
+        })
+    }
+
+    const addModelCast = () => {
+        modelCasts.value.push([null, null])
+    }
+
+    const saveModelCast = (index: number) => {
+        const castData = modelCasts.value[index],
+            columnId = castData[0],
+            type = castData[1],
+            oldColumnId = castData[2]
+
+        if(!columnId || !type) return
+
+        if(oldColumnId) {
+            saveExistingModelCast(columnId, type, oldColumnId)
+            return
+        }
+
+        const column = model.value.table.findColumnById(columnId)
+
+        if(!column) return
+
+        let pivot = model.value.relation('castsColumns').getPivotItem(column)
+
+        if(!pivot) {
+            pivot = model.value.relation('castsColumns').attachUnique(column)
+        }
+
+        pivot.type = type
+        pivot.save()
+    }
+
+    const saveExistingModelCast = (columnId: string, type: string, oldColumnId: string) => {
+        const oldColumn = model.value.table.findColumnById(oldColumnId)
+
+        if(!oldColumn) return
+
+        const pivot = model.value.relation('castsColumns').getPivotItem(oldColumn)
+
+        if(!pivot) return
+
+        pivot.columnId = columnId
+        pivot.type = type
+        pivot.save()
+
+        return
+    }
 
     const saveModelData = (nameWasChanged: boolean = false) => {
         if(nameWasChanged) {
@@ -259,6 +320,33 @@
                     @change="$event => saveAppendsColumns($event)"
                     :options="getSelectDataForLayout(model.table.getColumns())"
                 />
+            </div>
+
+            <div class="mt-4 bg-slate-850 rounded-md space-y-1 p-2 flex flex-col gap-2">
+                <span class="text-xs text-slate-400">Casts</span>
+                <div class="flex flex-col gap-3">
+                    <div class="flex gap-3" v-for="(modelCast, index) in modelCasts" :key="index">
+                        <div class="w-1/2">
+                            <UiSelect v-model="modelCasts[index][0]" label="Column" @change="saveModelCast(index)">
+                                <template v-for="column in model.table.getColumns()">
+                                    <option :value="column.id">{{ column.name }}</option>
+                                </template>
+                            </UiSelect>
+                        </div>
+                        <div class="w-1/2 mt-1">
+                            <UiText v-model="modelCasts[index][1]" label="Type" @input="saveModelCast(index)" />
+                        </div>
+                    </div>
+                </div>
+
+                <section
+                    class="flex w-full justify-center text-slate-400 hover:text-red-500 cursor-pointer text-sm"
+                >
+                    <div class="flex items-center" @click="addModelCast()">
+                        <PlusCircleIcon class="w-6 h-6" />
+                        <span class="px-1.5">Add Column</span>
+                    </div>
+                </section>
             </div>
 
             <div class="mt-4" v-if="onDevelopment">

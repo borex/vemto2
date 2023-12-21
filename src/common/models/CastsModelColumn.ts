@@ -9,6 +9,8 @@ export default class CastsModelColumn extends RelaDB.Model {
     modelId: string
     model: Model
 
+    type: string
+
     relationships() {
         return {
             column: () => this.belongsTo(Column),
