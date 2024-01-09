@@ -42,8 +42,21 @@ export default class Model extends AbstractSchemaModel implements SchemaModel {
     ownRelationships: Relationship[]
     relatedRelationships: Relationship[]
     hooks: any
-
     pluralAndSingularAreSame: boolean
+
+    /**
+     * Settings
+     */
+    callSeeder: boolean
+    attributesComments: boolean
+    methodsComments: boolean
+
+    /**
+     * PHP related properties
+     */
+    parentClass: string
+    interfaces: string[]
+    traits: string[]
 
     /**
      * Laravel related properties
@@ -98,9 +111,30 @@ export default class Model extends AbstractSchemaModel implements SchemaModel {
 
         this.createdFromInterface = creating
 
+        if (creating) {
+            this.generateDefaultImports()
+            this.generateDefaultSettings()
+        }
+
         this.save()
 
         return this
+    }
+
+    generateDefaultImports() {
+        this.parentClass = "Illuminate\\Database\\Eloquent\\Model"
+        
+        this.traits = [
+            "Illuminate\\Database\\Eloquent\\Factories\\HasFactory"
+        ]
+
+        this.interfaces = []
+    }
+
+    generateDefaultSettings() {
+        this.callSeeder = true
+        this.attributesComments = false
+        this.methodsComments = false
     }
 
     remove() {
@@ -162,6 +196,9 @@ export default class Model extends AbstractSchemaModel implements SchemaModel {
         this.appends = data.appends
         this.methods = data.methods
         this.createdFromInterface = false
+        this.parentClass = data.parentClass
+        this.interfaces = data.interfaces
+        this.traits = data.traits
         this.hasGuarded = data.hasGuarded
         this.hasFillable = data.hasFillable
         this.hasTimestamps = data.hasTimestamps
@@ -239,6 +276,9 @@ export default class Model extends AbstractSchemaModel implements SchemaModel {
             hidden: this.hidden,
             appends: this.appends,
             methods: this.methods,
+            parentClass: this.parentClass,
+            interfaces: this.interfaces,
+            traits: this.traits,
             hasGuarded: this.hasGuarded,
             hasFillable: this.hasFillable,
             hasTimestamps: this.hasTimestamps,
@@ -300,6 +340,18 @@ export default class Model extends AbstractSchemaModel implements SchemaModel {
             methods: DataComparator.arraysAreDifferent(
                 this.schemaState.methods,
                 comparisonData.methods
+            ),
+            parentClass: DataComparator.stringsAreDifferent(
+                this.schemaState.parentClass,
+                comparisonData.parentClass
+            ),
+            interfaces: DataComparator.arraysAreDifferent(
+                this.schemaState.interfaces,
+                comparisonData.interfaces
+            ),
+            traits: DataComparator.arraysAreDifferent(
+                this.schemaState.traits,
+                comparisonData.traits
             ),
             hasGuarded: DataComparator.booleansAreDifferent(
                 this.schemaState.hasGuarded,
@@ -549,5 +601,35 @@ export default class Model extends AbstractSchemaModel implements SchemaModel {
         this.hooks[type] = hooks
 
         this.save()
+    }
+
+    hasParentClass(): boolean {
+        return !! this.parentClass
+    }
+
+    getParentClass(): string {
+        return this.parentClass || ''
+    }
+
+    hasInterfaces(): boolean {
+        return this.interfaces && this.interfaces.length > 0
+    }
+
+    getInterfaces(): string[] {
+        return this.interfaces || []
+    }
+
+    hasTraits(): boolean {
+        return this.traits && this.traits.length > 0
+    }
+
+    getTraits(): string[] {
+        return this.traits || []
+    }
+
+    getImportAlias(importName: string): string {
+        if(!importName.includes(' as ')) return importName.split('\\').pop()
+
+        return importName.split(' as ').pop()
     }
 }
