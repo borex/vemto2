@@ -14,12 +14,19 @@ require_once 'classes/MigrationDecoder.php';
 require_once 'classes/ExtendedMigrator.php';
 require_once 'classes/ExtendedBlueprint.php';
 require_once 'classes/MigrationRepository.php';
+require_once 'classes/exceptions/ExtendedExceptionHandler.php';
+require_once 'classes/exceptions/ExtendedFoundationHandler.php';
+require_once 'classes/exceptions/ExtendedHandleExceptions.php';
 
 Vemto::execute('schema-reader', function () use ($app, $APP_DIRECTORY) {
     // Set the database connection to SQLite
     // config(['database.default' => 'sqlite']);
     // config(['database.connections.sqlite.database' => ':memory:']);
 
+    $app->bind(App\Exceptions\Handler::class, ExtendedExceptionHandler::class);
+    $app->bind(Illuminate\Contracts\Debug\ExceptionHandler::class, ExtendedFoundationHandler::class);
+    $app->bind(Illuminate\Foundation\Bootstrap\HandleExceptions::class, ExtendedHandleExceptions::class);
+    
     // Start the application with the extended kernel
     $app->bind(Illuminate\Contracts\Console\Kernel::class, ExtendedKernel::class);
     $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
@@ -28,6 +35,18 @@ Vemto::execute('schema-reader', function () use ($app, $APP_DIRECTORY) {
         new Symfony\Component\Console\Input\ArgvInput,
         new Symfony\Component\Console\Output\ConsoleOutput
     );
+
+    \set_error_handler(function($errorNumber, $message, $path, $line, $context) {
+        Vemto::log(sprintf('Error: %s [%s]', $message, $path));
+    });
+
+    \set_exception_handler(function($errorNumber, $message, $path, $line, $context) {
+        Vemto::log(sprintf('Error: %s [%s]', $message, $path));
+    });
+
+    \register_shutdown_function(function($errorNumber, $message, $path, $line, $context) {
+        Vemto::log(sprintf('Error: %s [%s]', $message, $path));
+    });
 
     // Register the migrator
     $migrationServiceProvider = new Illuminate\Database\MigrationServiceProvider($app);
