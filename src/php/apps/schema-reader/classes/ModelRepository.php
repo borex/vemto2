@@ -14,6 +14,7 @@ class ModelRepository {
     public static function getModelsFormatted() {
         $models = self::getModels();
 
+        // Vemto::dump($models);
         $formattedModels = [];
 
         foreach ($models as $model) {
@@ -265,49 +266,66 @@ class ModelRepository {
      * @return array
      */
     public static function getModels() {
-        $composerData = json_decode(
-            file_get_contents(base_path('composer.json')), 
-            true
-        );
+        // $composerData = json_decode(
+        //     file_get_contents(base_path('composer.json')), 
+        //     true
+        // );
 
-        $models = [];
+        // $models = [];
         
-        foreach ((array) data_get($composerData, 'autoload.psr-4') as $namespace => $path) {
-            $models = array_merge(collect(File::allFiles(base_path($path)))
-                ->map(function ($item) use ($namespace) {
-                    $path = $item->getRelativePathName();
-                    
-                    $class = sprintf('%s%s',
-                        $namespace,
-                        strtr(substr($path, 0, strrpos($path, '.')), '/', '\\')
-                    );
+        $appNamespaces = require_once(base_path('vendor/composer/autoload_classmap.php'));
+        
+        $models = [];
 
-                    return [
-                        'class' => $class,
-                        'path' => $path,
-                        'fullPath' => $item->getPathname(),
-                        'fileName' => $item->getFilename(),
-                        'fileContent' => file_get_contents($item->getPathname()),
-                    ];
-                })
-                ->filter(function ($classData) {
-                    $valid = false;
+        foreach ($appNamespaces as $class => $path) {
+            $realpath = realpath($path);
 
-                    if (class_exists($classData['class'])) {
-                        $reflection = new \ReflectionClass($classData['class']);
+            if(self::shouldIgnoreClass($class)) {
+                Vemto::dump('ignorou ' . $class);
+                continue;
+            }
 
-                        $isModel = $reflection->isSubclassOf(\Illuminate\Database\Eloquent\Model::class);
-                        $isAbstract = $reflection->isAbstract();
+            if(empty($realpath) || !file_exists($realpath)) continue;
 
-                        $valid = $isModel && !$isAbstract;
-                    }
+            $item = new SplFileInfo($realpath);
+            $isModel = false;
 
-                    return $valid;
-                })
-                ->values()
-                ->toArray(), $models);
+            try {
+                if(!class_exists($class)) continue;
+
+                $reflection = new \ReflectionClass($class);
+
+                $isSubclassOfModel = $reflection->isSubclassOf(Illuminate\Database\Eloquent\Model::class);
+                $isAbstract = $reflection->isAbstract();
+
+                $isModel = $isSubclassOfModel && !$isAbstract;
+            } catch (\Throwable $ignored) {
+                $isModel = false;
+            }
+
+            if(!$isModel) continue;
+
+            $models[] = [
+                'class' => $class,
+                'path' => $item->getPathname(),
+                'fullPath' => $item->getPathname(),
+                'fileName' => $item->getFilename(),
+                'fileContent' => file_get_contents($item->getPathname()),
+            ];
         }
 
         return $models;
+    }
+
+    public static function shouldIgnoreClass(string $class): bool
+    {
+        $classNames = collect([]);
+
+        $classStartsWith = collect([
+            'Psy',
+            'Symfony'
+        ]);
+
+        return $classNames->contains($class) || $classStartsWith->contains(fn ($value) => str_starts_with($class, $value));
     }
 } 
