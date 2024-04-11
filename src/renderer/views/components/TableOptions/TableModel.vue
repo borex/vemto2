@@ -115,6 +115,23 @@
         model.value.saveFromInterface()
     }
 
+    const onSoftDeletesChanged = () => {
+        model.value.saveFromInterface()
+
+        if(model.value.table.hasColumn('deleted_at') || !model.value.hasSoftDeletes) return;
+
+        const column = new Column({
+            name: 'deleted_at',
+            type: 'timestamp',
+            project: model.value.project.id,
+            tableId: model.value.table.id,
+            nullable: true
+        })
+        
+        column.order = column.calculateNextOrder()
+        column.saveFromInterface()
+    }
+
     const saveModelCollection = () => {
         if(!model.value.plural || !model.value.plural.length) {
             model.value.plural = modelPluralReference.value
@@ -262,7 +279,7 @@
                     <UiCheckbox
                         label="Has SoftDeletes"
                         v-model="model.hasSoftDeletes"
-                        @change="saveModelData()"
+                        @change="onSoftDeletesChanged()"
                     />
                 </div>
     
