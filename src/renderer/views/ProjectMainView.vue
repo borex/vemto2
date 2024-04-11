@@ -1,4 +1,5 @@
 <script setup lang="ts">
+    import debounce from "lodash/debounce"
     import { RouterView } from "vue-router"
     import ProjectNavbar from "@Renderer/views/components/ProjectNavbar.vue"
     import { onMounted, onUnmounted, ref, Ref } from "vue"
@@ -46,6 +47,8 @@
 
         await HandleProjectDatabase.populate(() => {
             canShow.value = true
+
+            setupFileChangesListener()
         })
     })
 
@@ -61,10 +64,20 @@
         })
     }
 
-    /**
-     * Checks for source changes every 750ms.
-     * Take care before changing the methods below.
-     */
+    const setupFileChangesListener = () => {
+        console.log("Setting up file changes listener")
+
+        Main.API.onFilesChanged(() => {
+            checkSourceChangesDebounced()
+        })
+    }
+
+    const checkSourceChangesDebounced = debounce(() => {
+        console.log("Checking source changes")
+
+        checkSourceChanges()
+    }, 500)
+
     const checkSourceChanges = async () => {
         const schemaBuilder = new SchemaBuilder(projectStore.project)
 
