@@ -37,10 +37,8 @@
     const create = async () => {
         if(creatingProject.value) return
 
-        console.log('antes do validation')
         if(!validate()) return
 
-        console.log('criou')
         createProject()
     }
 
@@ -116,10 +114,7 @@
     }, 250)
 
     const onProjectPathChanged = debounce(() => {
-        if(!settings.value.path?.length) {
-            errors.value.path = "The path is required"
-            return
-        }
+        if(!settings.value.path?.length) return
 
         delete errors.value.path
     }, 250)
@@ -175,7 +170,7 @@
         >
             <div class="space-y-2 p-4">
                 <div>
-                    <UiPathSelector v-model="settings.path" label="Project Path" />
+                    <UiPathSelector v-model="settings.path" label="Project Path" @input="onProjectPathChanged" />
 
                     <template v-if="errors.path !== undefined">
                         <span class="dark:text-red-500 text-sm pl-2">{{ errors.path }}</span>
