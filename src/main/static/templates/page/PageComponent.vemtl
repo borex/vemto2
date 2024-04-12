@@ -10,10 +10,10 @@ namespace <$ this.page.namespace $>;
 
 use Livewire\Component;
 <% for (let model of injectableModels) { %>
-use App\Models\<$ model.name $>;
+use <$ model.getClassString() $>;
 <% } %>
 <% for (let model of modelCollections) { %>
-use App\Models\<$ model.name $>;
+use <$ model.getClassString() $>;
 <% } %>
 use Livewire\WithPagination;
 use Illuminate\Support\Collection;

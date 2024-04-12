@@ -12,7 +12,7 @@ namespace <$ crud.livewireFormsNamespace $>;
  
 use Livewire\Form;
 use Livewire\Attributes\Rule;
-use App\Models\<$ modelName $>;
+use <$ crud.model.getClassString() $>;
 <% if(this.crud.hasPasswordInputs()) { %>
 use Illuminate\Support\Facades\Hash;
 <% } %>

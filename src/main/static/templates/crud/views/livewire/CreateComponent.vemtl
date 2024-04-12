@@ -16,7 +16,7 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Collection;
 use <$ crud.livewireFormsNamespace $>\CreateForm;
 <% for (let input of crud.getBelongsToInputs()) { %>
-use App\Models\<$ input.getRelatedModelName() $>;
+use <$ input.getRelatedModelClass() $>;
 <% } %>
 // hook:IMPORTS
  

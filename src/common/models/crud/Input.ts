@@ -171,6 +171,12 @@ export default class Input extends RelaDB.Model {
         return relatedModel ? relatedModel.table.getLabelColumnName() : ""
     }
 
+    getRelatedModelClass(): string {
+        const relatedModel = this.getRelatedModel()
+
+        return relatedModel ? relatedModel.getClassString() : ""
+    }
+
     getRelatedModel(): Model {
         return this.relationship ? this.relationship.relatedModel : null
     }

@@ -25,10 +25,10 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
-use App\Models\<$ modelName $>;
-use App\Models\<$ parentModelName $>;
+use <$ detailCrudModel.getClassString() $>;
+use <$ parentCrudModel.getClassString() $>;
 <% for (let input of detailCrud.getBelongsToInputs()) { %>
-use App\Models\<$ input.getRelatedModelName() $>;
+use <$ input.getRelatedModelClass() $>;
 <% } %>
 use <$ detailCrud.livewireFormsNamespace $>\CreateDetailForm;
 use <$ detailCrud.livewireFormsNamespace $>\UpdateDetailForm;

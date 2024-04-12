@@ -2,7 +2,7 @@
 
 <% const camelCase = this.require('camelCase') %>
 
-namespace App\Models;
+namespace <$ this.model.namespace $>;
 
 // hook:BEFORE_IMPORTS
 <% if(this.model.hasParentClass()) { %>

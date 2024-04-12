@@ -7,7 +7,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\<$ modelName $>;
+use <$ this.model.getClassString() $>;
 // hook:IMPORTS
 
 class <$ this.filenameWithoutExtension $> extends Seeder

@@ -12,11 +12,11 @@
 namespace <$ crud.livewireNamespace $>;
   
 use Livewire\Component;
-use App\Models\<$ modelName $>;
+use <$ crud.model.getClassString() $>;
 use Illuminate\Support\Collection;
 use <$ crud.livewireFormsNamespace $>\UpdateForm;
 <% for (let input of crud.getBelongsToInputs()) { %>
-use App\Models\<$ input.getRelatedModelName() $>;
+use <$ input.getRelatedModelClass() $>;
 <% } %>
 // hook:IMPORTS
  
