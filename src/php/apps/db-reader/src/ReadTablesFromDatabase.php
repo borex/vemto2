@@ -15,6 +15,7 @@ use KitLoong\MigrationsGenerator\Schema\SQLiteSchema;
 use KitLoong\MigrationsGenerator\Schema\SQLSrvSchema;
 use KitLoong\MigrationsGenerator\Schema\Models\Column as SchemaColumn;
 use KitLoong\MigrationsGenerator\Schema\Models\ForeignKey as SchemaForeignKey;
+use Vemto\Vemto;
 
 class ReadTablesFromDatabase
 {
@@ -89,7 +90,7 @@ class ReadTablesFromDatabase
         switch ($driver) {
             case Driver::MYSQL->value:
                 return $this->schema = app(MySQLSchema::class);
-
+                
             case Driver::PGSQL->value:
                 return $this->schema = app(PgSQLSchema::class);
 

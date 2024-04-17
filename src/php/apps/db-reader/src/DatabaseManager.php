@@ -63,13 +63,12 @@ class DatabaseManager {
         $this->checkDatabasePrefix($databaseName);
 
         try {
-            if ($this->dbType == 'pgsql') {
-                // PostgreSQL does not support IF NOT EXISTS in CREATE DATABASE
-                $this->pdo->exec("SELECT 'CREATE DATABASE \"$databaseName\"' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '$databaseName')");
-            } else {
-                // MySQL and SQL Server support this syntax
-                $this->pdo->exec("CREATE DATABASE IF NOT EXISTS `$databaseName`");
-            }
+            $createDatabaseSQL = match($this->dbType) {
+                'pgsql' => "CREATE DATABASE \"$databaseName\"",
+                default => "CREATE DATABASE IF NOT EXISTS `$databaseName`"
+            };
+
+            $this->pdo->exec($createDatabaseSQL);
         } catch (PDOException $e) {
             throw new Exception("Could not create database `$databaseName`: " . $e->getMessage());
         }
@@ -80,7 +79,12 @@ class DatabaseManager {
         $this->checkDatabasePrefix($databaseName);
 
         try {
-            $this->pdo->exec("DROP DATABASE IF EXISTS `$databaseName`");
+            $dropDatabaseSQL = match($this->dbType) {
+                'pgsql' => "DROP DATABASE IF EXISTS \"$databaseName\"",
+                default => "DROP DATABASE IF EXISTS `$databaseName`"
+            };
+
+            $this->pdo->exec($dropDatabaseSQL);
         } catch (PDOException $e) {
             throw new Exception("Could not drop database `$databaseName`: " . $e->getMessage());
         }
