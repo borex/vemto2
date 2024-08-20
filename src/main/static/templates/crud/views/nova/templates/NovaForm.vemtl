@@ -51,7 +51,7 @@
         ->readonly()
     <% } %>
     <# --- #>
-    <% if(input.isSelect() && (input.novaInputTypeIs('select') || input.novaInputTypeIs('multi-select') || input.novaInputTypeIs('boolean-group'))) { %>
+    <% if(input.isSelect() && (input.novaTypeIs('select') || input.novaTypeIs('multi-select') || input.novaTypeIs('boolean-group'))) { %>
         ->options([
             <% for(let option of input.items) { %>
                 '<$ option.value $>' => '<$ option.label $>',
@@ -59,7 +59,7 @@
         ])
     <% } %>
     <# --- #>
-    <% if(input.isSelect() && input.novaInputTypeIs('badge')) { %>
+    <% if(input.isSelect() && input.novaTypeIs('badge')) { %>
         <###>
         <% if(input.novaSettings.label && !input.novaSettings.labels?.length) { %>
             ->label('<$ input.novaSettings.label $>')
@@ -118,11 +118,11 @@
         ->searchable()
     <% } %>
     <# --- #>
-    <% if(input.novaInputTypeIs('audio') && input.novaSettings.preload) { %>
+    <% if(input.novaTypeIs('audio') && input.novaSettings.preload) { %>
         ->preload('<$ input.novaSettings.preload $>')
     <% } %>
     <# --- #>
-    <% if(input.novaInputTypeIs('avatar')) { %>
+    <% if(input.novaTypeIs('avatar')) { %>
         <###>
         <% if(input.novaSettings.squared) { %>
             ->squared()
@@ -133,7 +133,7 @@
         <% } %>
     <% } %>
     <# --- #>
-    <% if(input.novaInputTypeIs('boolean')) { %>
+    <% if(input.novaTypeIs('boolean')) { %>
         <###>
         <% if(input.novaSettings.trueValue) { %>
             <% const trueValue = input.novaSettings.trueValue === true ? input.novaSettings.trueValue : `'${input.novaSettings.trueValue}'` %>
@@ -148,7 +148,7 @@
         <% } %>
     <% } %>
     <# --- #>
-    <% if(input.novaInputTypeIs('boolean-group')) { %>
+    <% if(input.novaTypeIs('boolean-group')) { %>
         <###>
         <% if(input.novaSettings.hideFalseValues) { %>
             ->hideFalseValues()
@@ -163,7 +163,7 @@
         <% } %>
     <% } %>
     <# --- #>
-    <% if(input.novaInputTypeIs('code')) { %>
+    <% if(input.novaTypeIs('code')) { %>
         <###>
         <% if(input.novaSettings.isJson) { %>
             ->json()
@@ -174,7 +174,7 @@
         <% } %>
     <% } %>
     <# --- #>
-    <% if(input.novaInputTypeIs('currency')) { %>
+    <% if(input.novaTypeIs('currency')) { %>
         <###>
         <% if(input.novaSettings.currency) { %>
             ->currency('<$ input.novaSettings.currency $>')
@@ -187,7 +187,7 @@
     <# --- #>
     <% if(input.isTextarea()) { %>
         <###>
-        <% if(input.novaInputTypeIs('textarea') && input.novaSettings.rows) { %>
+        <% if(input.novaTypeIs('textarea') && input.novaSettings.rows) { %>
             ->rows(<$ input.novaSettings.rows $>)
         <% } %>
         <# --- #>
@@ -195,19 +195,19 @@
             ->alwaysShow()
         <% } %>
         <# --- #>
-        <% if(input.novaInputTypeIs('markdown')) { %>
+        <% if(input.novaTypeIs('markdown')) { %>
             <###>
             <% if(input.novaSettings.preset) { %>
                 ->preset('<$ input.novaSettings.preset $>')
             <% } %>
         <% } %>
         <# --- #>
-        <% if(!input.novaInputTypeIs('textarea') && input.novaSettings.withFiles) { %>
+        <% if(!input.novaTypeIs('textarea') && input.novaSettings.withFiles) { %>
             ->withFiles('<$ input.novaSettings.withFiles $>')
         <% } %>
     <% } %>
     <# --- #>
-    <% if(input.isNumber() || input.novaInputTypeIs('currency')) { %>
+    <% if(input.isNumber() || input.novaTypeIs('currency')) { %>
         <###>
         <% if(input.novaSettings.min) { %>
             ->min(<$ input.novaSettings.min $>)
@@ -224,7 +224,7 @@
         <% } %>
     <% } %>
     <# --- #>
-    <% if(input.novaInputTypeIs('slug')) { %>
+    <% if(input.novaTypeIs('slug')) { %>
         <###>
         <% if(input.novaSettings.from) { %>
             ->from('<$ input.novaSettings.from $>')
@@ -235,7 +235,7 @@
         <% } %>
     <% } %>
     <# --- #>
-    <% if(input.novaInputTypeIs('text') || input.novaInputTypeIs('number')) { %>
+    <% if(input.novaTypeIs('text') || input.novaTypeIs('number')) { %>
         <###>
         <% if(input.novaSettings.suggestions?.length) { %>
             ->suggestions([
@@ -272,7 +272,7 @@
             ->disk('<$ input.novaSettings.disk $>')
         <% } %>
         <# --- #>
-        <% if(input.novaInputTypeIs('file') && input.novaSettings.disableDownload) { %>
+        <% if(input.novaTypeIs('file') && input.novaSettings.disableDownload) { %>
             ->disableDownload()
         <% } %>
         <# --- #>
@@ -303,7 +303,7 @@
                 <% } %>
             ])
         <% } %>
-        <% if(input.novaInputTypeIs('image')) { %>
+        <% if(input.novaTypeIs('image')) { %>
             <###>
             <% if(input.novaSettings.maxWidth) { %>
                 ->maxWidth(<$ input.novaSettings.maxWidth $>)

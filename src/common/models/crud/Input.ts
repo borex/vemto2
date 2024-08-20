@@ -301,7 +301,9 @@ export default class Input extends RelaDB.Model {
         return this.column.isJson()
     }
 
-    novaInputTypeIs(type: NovaInputType): boolean {
+    novaTypeIs(type: NovaInputType): boolean {
+        if(!this.novaSettings) return false
+        
         return this.novaSettings.inputType === type
     }
 
