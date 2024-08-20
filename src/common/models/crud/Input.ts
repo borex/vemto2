@@ -14,6 +14,7 @@ import FilamentIndividualValidations from "./filament/FilamentIndividualValidati
 import GenerateInputValidation, { ValidationRuleType } from "./services/GenerateInputValidation"
 import FillInputNovaData from "./fillers/FillInputNovaData"
 import NovaInputSettings from "./nova/NovaInputSettings"
+import { NovaInputType } from "./nova/NovaInputTypesList"
 
 export enum InputValidationRuleType {
     TEXTUAL = "textual",
@@ -298,6 +299,10 @@ export default class Input extends RelaDB.Model {
 
     isJson(): boolean {
         return this.column.isJson()
+    }
+
+    novaInputTypeIs(type: NovaInputType): boolean {
+        return this.novaSettings.inputType === type
     }
 
     isRequiredOnCreation(): boolean {

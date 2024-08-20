@@ -1,5 +1,4 @@
 <% const inputSettings = input.novaSettings %>
-<% const novaInputTypeIs = (type) => input.novaSettings.inputType === type %>
 <% const inputLabel = input.isBelongsTo() ? `'${capitalCase(input.relationship.name)}'` : this.helpers.toTranslatableFormat(input.label) %>
 <% const inputAttribute = input.isBelongsTo() ? input.relationship.name : input.name %>
 
@@ -52,7 +51,7 @@
         ->readonly()
     <% } %>
     <# --- #>
-    <% if(input.isSelect() && (novaInputTypeIs('select') || novaInputTypeIs('multi-select') || novaInputTypeIs('boolean-group'))) { %>
+    <% if(input.isSelect() && (input.novaInputTypeIs('select') || input.novaInputTypeIs('multi-select') || input.novaInputTypeIs('boolean-group'))) { %>
         ->options([
             <% for(let option of input.items) { %>
                 '<$ option.value $>' => '<$ option.label $>',
@@ -60,7 +59,7 @@
         ])
     <% } %>
     <# --- #>
-    <% if(input.isSelect() && novaInputTypeIs('badge')) { %>
+    <% if(input.isSelect() && input.novaInputTypeIs('badge')) { %>
         <###>
         <% if(input.novaSettings.label && !input.novaSettings.labels?.length) { %>
             ->label('<$ input.novaSettings.label $>')
@@ -119,11 +118,11 @@
         ->searchable()
     <% } %>
     <# --- #>
-    <% if(novaInputTypeIs('audio') && input.novaSettings.preload) { %>
+    <% if(input.novaInputTypeIs('audio') && input.novaSettings.preload) { %>
         ->preload('<$ input.novaSettings.preload $>')
     <% } %>
     <# --- #>
-    <% if(novaInputTypeIs('avatar')) { %>
+    <% if(input.novaInputTypeIs('avatar')) { %>
         <###>
         <% if(input.novaSettings.squared) { %>
             ->squared()
@@ -134,7 +133,7 @@
         <% } %>
     <% } %>
     <# --- #>
-    <% if(novaInputTypeIs('boolean')) { %>
+    <% if(input.novaInputTypeIs('boolean')) { %>
         <###>
         <% if(input.novaSettings.trueValue) { %>
             <% const trueValue = input.novaSettings.trueValue === true ? input.novaSettings.trueValue : `'${input.novaSettings.trueValue}'` %>
@@ -149,7 +148,7 @@
         <% } %>
     <% } %>
     <# --- #>
-    <% if(novaInputTypeIs('boolean-group')) { %>
+    <% if(input.novaInputTypeIs('boolean-group')) { %>
         <###>
         <% if(input.novaSettings.hideFalseValues) { %>
             ->hideFalseValues()
@@ -164,7 +163,7 @@
         <% } %>
     <% } %>
     <# --- #>
-    <% if(novaInputTypeIs('code')) { %>
+    <% if(input.novaInputTypeIs('code')) { %>
         <###>
         <% if(input.novaSettings.isJson) { %>
             ->json()
@@ -175,7 +174,7 @@
         <% } %>
     <% } %>
     <# --- #>
-    <% if(novaInputTypeIs('currency')) { %>
+    <% if(input.novaInputTypeIs('currency')) { %>
         <###>
         <% if(input.novaSettings.currency) { %>
             ->currency('<$ input.novaSettings.currency $>')
@@ -188,7 +187,7 @@
     <# --- #>
     <% if(input.isTextarea()) { %>
         <###>
-        <% if(novaInputTypeIs('textarea') && input.novaSettings.rows) { %>
+        <% if(input.novaInputTypeIs('textarea') && input.novaSettings.rows) { %>
             ->rows(<$ input.novaSettings.rows $>)
         <% } %>
         <# --- #>
@@ -196,19 +195,19 @@
             ->alwaysShow()
         <% } %>
         <# --- #>
-        <% if(novaInputTypeIs('markdown')) { %>
+        <% if(input.novaInputTypeIs('markdown')) { %>
             <###>
             <% if(input.novaSettings.preset) { %>
                 ->preset('<$ input.novaSettings.preset $>')
             <% } %>
         <% } %>
         <# --- #>
-        <% if(!novaInputTypeIs('textarea') && input.novaSettings.withFiles) { %>
+        <% if(!input.novaInputTypeIs('textarea') && input.novaSettings.withFiles) { %>
             ->withFiles('<$ input.novaSettings.withFiles $>')
         <% } %>
     <% } %>
     <# --- #>
-    <% if(input.isNumber() || novaInputTypeIs('currency')) { %>
+    <% if(input.isNumber() || input.novaInputTypeIs('currency')) { %>
         <###>
         <% if(input.novaSettings.min) { %>
             ->min(<$ input.novaSettings.min $>)
@@ -225,7 +224,7 @@
         <% } %>
     <% } %>
     <# --- #>
-    <% if(novaInputTypeIs('slug')) { %>
+    <% if(input.novaInputTypeIs('slug')) { %>
         <###>
         <% if(input.novaSettings.from) { %>
             ->from('<$ input.novaSettings.from $>')
@@ -236,7 +235,7 @@
         <% } %>
     <% } %>
     <# --- #>
-    <% if(novaInputTypeIs('text') || novaInputTypeIs('number')) { %>
+    <% if(input.novaInputTypeIs('text') || input.novaInputTypeIs('number')) { %>
         <###>
         <% if(input.novaSettings.suggestions?.length) { %>
             ->suggestions([
@@ -273,7 +272,7 @@
             ->disk('<$ input.novaSettings.disk $>')
         <% } %>
         <# --- #>
-        <% if(novaInputTypeIs('file') && input.novaSettings.disableDownload) { %>
+        <% if(input.novaInputTypeIs('file') && input.novaSettings.disableDownload) { %>
             ->disableDownload()
         <% } %>
         <# --- #>
@@ -304,7 +303,7 @@
                 <% } %>
             ])
         <% } %>
-        <% if(novaInputTypeIs('image')) { %>
+        <% if(input.novaInputTypeIs('image')) { %>
             <###>
             <% if(input.novaSettings.maxWidth) { %>
                 ->maxWidth(<$ input.novaSettings.maxWidth $>)
