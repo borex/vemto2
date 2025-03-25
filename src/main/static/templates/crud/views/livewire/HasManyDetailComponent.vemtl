@@ -16,18 +16,17 @@
 <% const parentCrud = hasManyDetail.crud %>
 <% const parentCrudModel = parentCrud.model %>
 <% const parentModelName = parentCrudModel.name %>
-<% const parentCrudItemVarName = camelCase(parentCrud.settings.itemName) %>
+<% const parentCrudItemVarName = camelCase(parentCrud.settings.itemName) + (parentCrud.settings.itemName.toLowerCase() == 'form' ? 'Data' : '') %>
 <% const viewsFolderName = `${parentCrud.section.getFolderName()}.${paramCase(parentCrud.plural)}` %>
 <# Detail CRUD Variables #>
 <% const detailCrud = hasManyDetail.detailCrud %>
 <% const detailCrudModel = detailCrud.model %>
 <% const modelName = detailCrudModel.name %>
-<% const itemVarName = camelCase(detailCrud.settings.itemName) %>
+<% const itemVarName = camelCase(detailCrud.settings.itemName) + (detailCrud.settings.itemName.toLowerCase() == 'form' ? 'Data' : '') %>
 <% const collectionVarName = 'detail' + pascalCase(detailCrud.settings.collectionName) %>
 
 namespace <$ detailCrud.livewireNamespace $>;
 
-use Livewire\Form;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;

@@ -13,7 +13,7 @@
 <% const camelCase = this.require('camelCase') %>
 <% const pascalCase = this.require('pascalCase') %>
 <% const paramCase = this.require('paramCase') %>
-<% const itemVarName = camelCase(crud.settings.itemName) %>
+<% const itemVarName = camelCase(crud.settings.itemName) + (crud.settings.itemName.toLowerCase() == 'form' ? 'Data' : '') %>
 <% const collectionVarName = camelCase(crud.settings.collectionName) %>
 <% const viewsFolderName = `${crud.section.getFolderName()}.${paramCase(crud.plural)}` %>
 
@@ -34,7 +34,7 @@ class <$ this.filenameWithoutExtension $> extends Component
     public ?<$ modelName $> $<$ itemVarName $> = null;
 
     // hook:BEFORE_VARIABLES
-    public UpdateForm $form;
+    public UpdateForm $updateForm;
     <# --- #>
     <% for (let input of crud.getBelongsToInputs()) { %>
     <% const model = input.getRelatedModel() %>
@@ -49,7 +49,7 @@ class <$ this.filenameWithoutExtension $> extends Component
         // hook:BEFORE_MOUNT
         $this-><$ itemVarName $> = $<$ itemVarName $>;
 
-        $this->form->set<$ modelName $>($<$ itemVarName $>);
+        $this->updateForm->set<$ modelName $>($<$ itemVarName $>);
         <# --- #>
         <% for (let input of crud.getBelongsToInputs()) { %>
         <# --- #>
@@ -70,7 +70,7 @@ class <$ this.filenameWithoutExtension $> extends Component
         $this->validate();
         // hook:AFTER_VALIDATE
 
-        $this->form->save();
+        $this->updateForm->save();
 
         $this->dispatch('saved');
     }
