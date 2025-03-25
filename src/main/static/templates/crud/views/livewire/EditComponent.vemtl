@@ -13,7 +13,7 @@
 <% const camelCase = this.require('camelCase') %>
 <% const pascalCase = this.require('pascalCase') %>
 <% const paramCase = this.require('paramCase') %>
-<% const itemVarName = camelCase(crud.settings.itemName) %>
+<% const itemVarName = camelCase(crud.settings.itemName) + (crud.settings.itemName.toLowerCase() === 'form' ? 'Data' : '') %>
 <% const collectionVarName = camelCase(crud.settings.collectionName) %>
 <% const viewsFolderName = `${crud.section.getFolderName()}.${paramCase(crud.plural)}` %>
 

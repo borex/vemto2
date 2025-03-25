@@ -17,7 +17,7 @@
 <# Detail CRUD Variables #>
 <% const detailCrud = hasManyDetail.detailCrud %>
 <% const detailCrudModel = detailCrud.model %>
-<% const itemVarName = camelCase(detailCrud.settings.itemName) %>
+<% const itemVarName = camelCase(detailCrud.settings.itemName) + (detailCrud.settings.itemName.toLowerCase() === 'form' ? 'Data' : '') %>
 <% const colspanSize = detailCrud.inputs.length + 1 %>
 <% const collectionVarName = 'detail' + pascalCase(detailCrud.settings.collectionName) %>
 <% const viewsFolderName = `${detailCrud.section.getFolderName()}.${paramCase(detailCrud.plural)}` %>

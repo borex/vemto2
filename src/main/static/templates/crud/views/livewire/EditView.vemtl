@@ -9,7 +9,7 @@
 <% const table = model.table %>
 <% const modelName = crud.model.name %>
 <% const camelCase = this.require("camelCase") %>
-<% const itemVarName = camelCase(crud.settings.itemName) %>
+<% const itemVarName = camelCase(crud.settings.itemName) + (crud.settings.itemName.toLowerCase() === 'form' ? 'Data' : '') %>
 <% const collectionVarName = camelCase(crud.settings.collectionName) %>
 
 <% const InputRenderer = this.require("InputRenderer") %>

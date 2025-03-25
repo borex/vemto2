@@ -20,7 +20,7 @@
 
 namespace <$ crud.livewireFormsNamespace $>;
  
-use Livewire\Form;
+use Livewire\Form as LivewireForm;
 use Livewire\Attributes\Rule;
 use App\Models\<$ modelName $>;
 <% if(this.crud.hasPasswordInputs()) { %>
@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Hash;
 <% } %>
 // hook:IMPORTS
  
-class <$ this.filenameWithoutExtension $> extends Form
+class <$ this.filenameWithoutExtension $> extends LivewireForm
 {
     // hook:TRAITS
 

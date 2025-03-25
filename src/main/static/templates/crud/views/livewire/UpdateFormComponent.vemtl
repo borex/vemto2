@@ -13,12 +13,12 @@
 <% const camelCase = this.require('camelCase') %>
 <% const pascalCase = this.require('pascalCase') %>
 <% const paramCase = this.require('paramCase') %>
-<% const itemVarName = camelCase(crud.settings.itemName) %>
+<% const itemVarName = camelCase(crud.settings.itemName) + (crud.settings.itemName.toLowerCase() === 'form' ? 'Data' : '') %>
 <% const collectionVarName = camelCase(crud.settings.collectionName) %>
 
 namespace <$ crud.livewireFormsNamespace $>;
  
-use Livewire\Form;
+use Livewire\Form as LivewireForm;
 use Illuminate\Validation\Rule;
 use App\Models\<$ modelName $>;
 <% if(this.crud.hasPasswordInputs()) { %>
@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Hash;
 <% } %>
 // hook:IMPORTS
  
-class <$ this.filenameWithoutExtension $> extends Form
+class <$ this.filenameWithoutExtension $> extends LivewireForm
 {
     // hook:TRAITS
 

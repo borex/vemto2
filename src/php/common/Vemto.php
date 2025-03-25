@@ -239,7 +239,6 @@ class Vemto
     public static function getSettings(string $basePath = ""): array
     {
         $basePath = empty($basePath) ? getcwd() : $basePath;
-        
         $settingsFile = $basePath . DIRECTORY_SEPARATOR . '.vemto_settings';
     
         if(!file_exists($settingsFile)) {
