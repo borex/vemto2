@@ -18,11 +18,15 @@
 <% const itemVarName = camelCase(crud.settings.itemName) %>
 <% const collectionVarName = camelCase(crud.settings.collectionName) %>
 
+<% const modelNameAlias = modelName + 'Model' %>
+<% const modelNameNeedsToBeReplaced = modelName.toLowerCase() == 'form' %>
+<% const modelNameForUseStatement = modelNameNeedsToBeReplaced ? `${modelName} as ${modelNameAlias}` : modelName %>
+
 namespace <$ crud.livewireFormsNamespace $>;
  
 use Livewire\Form;
 use Livewire\Attributes\Rule;
-use App\Models\<$ modelName $>;
+use App\Models\<$ modelNameForUseStatement $>;
 <% if(this.crud.hasPasswordInputs()) { %>
 use Illuminate\Support\Facades\Hash;
 <% } %>
@@ -61,7 +65,7 @@ class <$ this.filenameWithoutExtension $> extends Form
             $this-><$ input.column.name $> = Hash::make($this-><$ input.column.name $>);
         <% } %>
 
-        $<$ itemVarName $> = <$ modelName $>::create($this->except([
+        $<$ itemVarName $> = <$ modelNameNeedsToBeReplaced ? modelNameAlias : modelName $>::create($this->except([
             <% for(let input of crud.getFileInputs()) { %>
             '<$ input.getNewPropertyName() $>',
             <% } %>

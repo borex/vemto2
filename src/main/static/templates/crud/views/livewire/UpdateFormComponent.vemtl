@@ -16,11 +16,16 @@
 <% const itemVarName = camelCase(crud.settings.itemName) %>
 <% const collectionVarName = camelCase(crud.settings.collectionName) %>
 
+<% const modelNameAlias = modelName + 'Model' %>
+<% const modelNameNeedsToBeReplaced = modelName.toLowerCase() == 'form' %>
+<% const modelNameForUseStatement = modelNameNeedsToBeReplaced ? `${modelName} as ${modelNameAlias}` : modelName %>
+<% const modelNameToLayout = modelNameNeedsToBeReplaced ? modelNameAlias : modelName %>
+
 namespace <$ crud.livewireFormsNamespace $>;
  
 use Livewire\Form;
 use Illuminate\Validation\Rule;
-use App\Models\<$ modelName $>;
+use App\Models\<$ modelNameForUseStatement $>;
 <% if(this.crud.hasPasswordInputs()) { %>
 use Illuminate\Support\Facades\Hash;
 <% } %>
@@ -31,7 +36,7 @@ class <$ this.filenameWithoutExtension $> extends Form
     // hook:TRAITS
 
     // hook:BEFORE_VARIABLES
-    public ?<$ modelName $> $<$ itemVarName $>;
+    public ?<$ modelNameToLayout $> $<$ itemVarName $>;
 
     <% for (let input of crud.inputs) { %>
         public $<$ input.column.name $> = '<$ input.defaultValue || '' $>';
@@ -53,7 +58,7 @@ class <$ this.filenameWithoutExtension $> extends Form
         ];
     }
 
-    public function set<$ modelName $>(<$ modelName $> $<$ itemVarName $>)
+    public function set<$ modelName $>(<$ modelNameToLayout $> $<$ itemVarName $>)
     {
         $this-><$ itemVarName $> = $<$ itemVarName $>;
         
