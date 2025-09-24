@@ -13,6 +13,7 @@
     "build:local": "node scripts/no-sign-config.js && node scripts/prepare-build.js && electron-vite build && node scripts/post-build.js && electron-builder --config electron-builder-no-sign.json",
     "build": "node scripts/prepare-build.js && electron-vite build && node scripts/post-build.js && electron-builder --publish always",
     "build:win": "node scripts/build.js && electron-builder --win",
+    "build:win-nosign": "node scripts/no-sign-config.js && node scripts/prepare-build.js && electron-vite build && node scripts/post-build.js && electron-builder --config electron-builder-no-sign.json --win",
     "build:mac": "node scripts/build.js && electron-builder --mac",
     "build:linux": "node scripts/prepare-build.js && electron-vite build && node scripts/post-build.js && electron-builder --linux --x64 --publish always",
     "lint": "eslint ./src --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
