@@ -1,0 +1,87 @@
+# This workflow builds the Vemto application for Windows.
+# It is triggered automatically when you push a new tag (e.g., v1.2.3),
+# or you can run it manually from the GitHub Actions tab.
+
+name: Build Vemto for Windows
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on tags like v1.0.0, v2.1, etc.
+  workflow_dispatch: # Allows for manual triggering of the workflow
+
+jobs:
+  build-windows:
+    name: Build Windows x64
+    runs-on: windows-latest # Use a Windows environment to avoid cross-compilation issues
+
+    steps:
+      # 1. Checkout the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18 # Use a specific LTS version for consistency
+
+      # 3. Install Yarn package manager
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      # 4. Install Node.js dependencies
+      - name: Install Node Dependencies
+        run: yarn install --frozen-lockfile
+
+      # 5. Set up PHP environment
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, fileinfo, intl
+          coverage: none
+
+      # 6. Install Composer dependencies in subdirectories (FIXED STEP)
+      - name: Install Composer Dependencies
+        run: |
+          Get-ChildItem -Path src/php/apps -Directory | ForEach-Object {
+            Write-Host "---- Running composer install in $($_.FullName) ----"
+            Push-Location $_.FullName
+            composer install --prefer-dist --no-progress
+            Pop-Location
+          }
+        shell: pwsh
+
+      # 7. Install Box (PHP phar builder) for Windows
+      - name: Install Box
+        run: |
+          curl -LSs https://box-project.github.io/box2/installer.php | php
+          ren box.phar box.exe
+          echo "${{ github.workspace }}" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        shell: pwsh
+
+      # 8. Compile the Vemto PHP tools using Box
+      - name: Compile PHP Tools
+        run: yarn php:compile
+
+      # 9. Build the unsigned Electron application for Windows
+      - name: Build Unsigned Windows App
+        run: yarn build:win-nosign-x64
+
+      # 10. Upload the built application as a workflow artifact
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Vemto-Windows-x64
+          path: dist/*.exe
+
+      # 11. Create a GitHub Release and attach the installer
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
