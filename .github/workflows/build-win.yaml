@@ -41,7 +41,7 @@ jobs:
           php-version: '8.2'
           extensions: mbstring, fileinfo, intl
           coverage: none
-          tools: box # ADDED: This will install a compatible version of Box
+          tools: box
 
       # 6. Install Composer dependencies in subdirectories
       - name: Install Composer Dependencies
@@ -61,6 +61,8 @@ jobs:
       # 8. Build the unsigned Electron application for Windows
       - name: Build Unsigned Windows App
         run: yarn build:win-nosign
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # 9. Upload the built application as a workflow artifact
       - name: Upload Build Artifact
