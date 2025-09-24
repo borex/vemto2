@@ -1,9 +1,9 @@
-name: Build Electron App
+name: Build Vemto + Electron Windows App
 
 on:
   push:
     tags:
-      - 'v*'   # run when you push a version tag like v1.0.0
+      - 'v*'   # triggers when you push a tag like v1.0.0
   workflow_dispatch:  # allow manual run
 
 jobs:
@@ -11,22 +11,57 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      # 1. Checkout code
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
+      # 3. Install Yarn (optional, if not bundled)
+      - name: Setup Yarn
+        uses: borales/actions-yarn@v2
 
-      - name: Build Electron app for Windows
+      # 4. Install project dependencies
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --legacy-peer-deps
+
+      # 5. Setup PHP
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+
+      # 6. Install Box for Vemto compilation
+      - name: Install Box
+        run: |
+          curl -LSs https://box-project.github.io/box2/installer.php | php
+          mv box.phar box
+          chmod +x box
+          sudo mv box /usr/local/bin/
+
+      # 7. Compile Vemto PHP tools
+      - name: Compile PHP tools
+        run: yarn php:compile
+
+      # 8. Build Electron app for Windows
+      - name: Build Electron app
         run: npm run build
 
+      # 9. Upload artifact (optional)
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: vemto-win64
           path: dist/*
+
+      # 10. Create GitHub Release and attach built app
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
