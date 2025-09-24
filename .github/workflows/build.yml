@@ -3,7 +3,7 @@ name: Build Vemto + Electron Windows App
 on:
   push:
     tags:
-      - 'v*'   # triggers when you push a tag like v1.0.0
+      - 'v*'  # triggers when you push a tag like v1.0.0
   workflow_dispatch:  # allow manual run
 
 jobs:
@@ -35,33 +35,39 @@ jobs:
         with:
           php-version: 8.1
 
-      # 6. Install Box for Vemto compilation
+      # 6. Install Composer dependencies (FIX: Added this step)
+      - name: Install Composer Dependencies
+        run: composer install --prefer-dist --no-progress
+
+      # 7. Install Box for Vemto compilation (FIX: Corrected for Windows)
       - name: Install Box
         run: |
+          # Download and rename box.phar in the current directory
           curl -LSs https://box-project.github.io/box2/installer.php | php
-          mv box.phar box
-          chmod +x box
-          sudo mv box /usr/local/bin/
+          ren box.phar box.exe
+          # Add the current directory to the GitHub Actions path
+          echo "${{ github.workspace }}" >> $env:GITHUB_PATH
+        shell: pwsh
 
-      # 7. Compile Vemto PHP tools
+      # 8. Compile Vemto PHP tools
       - name: Compile PHP tools
         run: yarn php:compile
 
-      # 8. Build Electron app for Windows
+      # 9. Build Electron app for Windows (FIX: Corrected command)
       - name: Build Electron app
-        run: npm run build
+        run: yarn build:win
 
-      # 9. Upload artifact (optional)
+      # 10. Upload artifact (optional)
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: vemto-win64
-          path: dist/*
+          path: dist/*.exe
 
-      # 10. Create GitHub Release and attach built app
+      # 11. Create GitHub Release and attach built app
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/*
+          files: dist/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
