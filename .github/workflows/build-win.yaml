@@ -34,15 +34,16 @@ jobs:
       - name: Install Node Dependencies
         run: yarn install --frozen-lockfile
 
-      # 5. Set up PHP environment
-      - name: Setup PHP
+      # 5. Set up PHP environment and Box
+      - name: Setup PHP and Box
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2' # UPDATED: Changed from 8.1 to 8.2
+          php-version: '8.2'
           extensions: mbstring, fileinfo, intl
           coverage: none
+          tools: box # ADDED: This will install a compatible version of Box
 
-      # 6. Install Composer dependencies in subdirectories (FIXED STEP)
+      # 6. Install Composer dependencies in subdirectories
       - name: Install Composer Dependencies
         run: |
           Get-ChildItem -Path src/php/apps -Directory | ForEach-Object {
@@ -53,30 +54,22 @@ jobs:
           }
         shell: pwsh
 
-      # 7. Install Box (PHP phar builder) for Windows
-      - name: Install Box
-        run: |
-          curl -LSs https://box-project.github.io/box2/installer.php | php
-          ren box.phar box.exe
-          echo "${{ github.workspace }}" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        shell: pwsh
-
-      # 8. Compile the Vemto PHP tools using Box
+      # 7. Compile the Vemto PHP tools using Box
       - name: Compile PHP Tools
         run: yarn php:compile
 
-      # 9. Build the unsigned Electron application for Windows
+      # 8. Build the unsigned Electron application for Windows
       - name: Build Unsigned Windows App
         run: yarn build:win-nosign-x64
 
-      # 10. Upload the built application as a workflow artifact
+      # 9. Upload the built application as a workflow artifact
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Vemto-Windows-x64
           path: dist/*.exe
 
-      # 11. Create a GitHub Release and attach the installer
+      # 10. Create a GitHub Release and attach the installer
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
