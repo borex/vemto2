@@ -21,9 +21,9 @@ jobs:
         with:
           node-version: 18
 
-      # 3. Install Yarn (optional, if not bundled)
-      - name: Setup Yarn
-        uses: borales/actions-yarn@v2
+      # 3. Install Yarn globally
+      - name: Install Yarn
+        run: npm install -g yarn
 
       # 4. Install project dependencies
       - name: Install dependencies
