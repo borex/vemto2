@@ -60,7 +60,7 @@ jobs:
 
       # 8. Build the unsigned Electron application for Windows
       - name: Build Unsigned Windows App
-        run: yarn build:win-nosign-x64
+        run: yarn build:win
 
       # 9. Upload the built application as a workflow artifact
       - name: Upload Build Artifact
